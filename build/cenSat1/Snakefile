@@ -123,10 +123,9 @@ rule rmsk:
         with tempfile.NamedTemporaryFile() as bed1Fh:
             for f in rmskOutFiles:
                 bed1Fh.seek(0, 2)
-                print("@@@",f)
-                pipettor.run(["rmsk2bed"], stdin=f, stdout=bed1Fh)
+                pipettor.run(["../../bin/RM2Bed.py", "--stdout", "--log_level=WARN", f], stdout=bed1Fh)
             with tempfile.NamedTemporaryFile() as bed2Fh:
-                pipettor.run([["tawk", '{print $1, $2, $3, $4"/"$11, $5, $6}', bed1Fh.name],
+                pipettor.run([["tawk", '{if ($8 != "unknown") {$4 = $4"/"$8}; print $1, $2, $3, $4, 0, $6}', bed1Fh.name],
                               [fixTigWithRangeBedCmd],
                               bedSortCmd], stdout=bed2Fh.name)
                 pipettor.run(["bedToBigBed", "-tab", bed2Fh.name, asmSizes, rmskBigBed])

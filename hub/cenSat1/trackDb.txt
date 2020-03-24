@@ -26,3 +26,13 @@ bigDataUrl data/chm13_20k_hiFi_master0103.centromereONTMethylation.bam
 priority 11
 group assembly
 
+track rmsk
+shortLabel Repeat Masker
+longLabel Repeat Masker
+type bigBed
+visibility hide
+color 218,32,165
+bigDataUrl rmsk.bigBed
+priority 11
+group annotation
+

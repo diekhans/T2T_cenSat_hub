@@ -1,4 +1,14 @@
+name map
+label Mapping and Sequencing
+priority 1
+defaultIsClosed 0
+
 name assembly
 label Assembly
-priority 1
+priority 2
+defaultIsClosed 0
+
+name annotation
+label Annotation
+priority 3
 defaultIsClosed 0
