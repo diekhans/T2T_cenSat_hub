@@ -1,0 +1,4 @@
+name assembly
+label Assembly
+priority 1
+defaultIsClosed 0

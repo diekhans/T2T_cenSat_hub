@@ -1,0 +1,28 @@
+track centromereRegions
+shortLabel Centromere Regions
+longLabel Centromere Regions
+type bigBed
+visibility dense
+color 218,165,32
+bigDataUrl centroRegions.bigBed
+priority 1
+group assembly
+
+track hifi_20k
+shortLabel HiFi Alignments
+longLabel Hicanu HiFi 20K Alignments
+type bam
+visibility hide
+bigDataUrl data/chm13_hicanu_hifi_20k.reads.bam
+priority 10
+group assembly
+
+track methylationAlignments
+shortLabel Methylation Alignments
+longLabel ONT Methylation Alignments
+type bam
+visibility hide
+bigDataUrl data/chm13_20k_hiFi_master0103.centromereONTMethylation.bam
+priority 11
+group assembly
+

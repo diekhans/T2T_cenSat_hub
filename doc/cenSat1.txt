@@ -1,0 +1,45 @@
+- hub is https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt
+  which links to /nanopore/markd/t2t-centromere/T2T_cenSat/hub/
+- hub data is in /nanopore/markd/t2t-centromere/T2T_cenSat/hub/cenSat1/data
+- Karen's assembly directory
+- /public/groups/nanopore/karen/chm13/cenSat_WG/assembly/
+
+
+################################################################################
+2020-03-18: markd basic browser 
+  # phase 1 reference sequences for now:
+
+  # create build/cenSat1/Snakefile to build hub, run it to build all tracks,
+  # Rerun this when manual steps below are done first. 
+  snakemake --cores=4
+
+################################################################################
+2020-03-19 markd  HiFi alignments to the CHM13 HiCanu assembly
+  # from Glennis Logsdon
+  cd /nanopore/markd/public_html/T2T_cenSat/hub/cenSat1/data/
+  https://eichlerlab.gs.washington.edu/help/glogsdon/Shared/cenSat/chm13_hicanu_hifi_20k.reads.bam
+  https://eichlerlab.gs.washington.edu/help/glogsdon/Shared/cenSat/chm13_hicanu_hifi_20k.reads.bam.bai
+
+################################################################################
+2020-03-19 markd UL alignments
+  # from Sergey Koren 
+  cd /nanopore/markd/public_html/T2T_cenSat/hub/cenSat1/data/
+  # Here are the UL alignment bams from Sergey using our marker assisted mapping described in the T2TX paper
+   ftp://ftp.cbcb.umd.edu/pub/data/sergek/.chm13_20k_hiFi_master0103.centromereONTMethylation.tar.gz
+  # unpack double tar into chm13_20k_hiFi_master0103.centromereONTMethylation/
+
+  samtools merge chm13_20k_hiFi_master0103.centromereONTMethylation.bam chm13_20k_hiFi_master0103.centromereONTMethylation/tig000*/*.bam
+
+
+################################################################################
+2020-03-23: markd dnadiffs data
+
+   cd T2T_cenSat/hub/cenSat1/data
+   wget -nv https://obj.umiacs.umd.edu/sergek/seqdata/chm13/HiFi/chm13_20k_hiFi_master0103.dnadiff.tar.gz
+   mkdir chm13_20k_hiFi_master0103.dnadiff
+   tar -C chm13_20k_hiFi_master0103.dnadiff -xf chm13_20k_hiFi_master0103.dnadiff.tar.gz
+
+################################################################################
+todo:
+- How hard would it be to add a simple restriction map, like what is common on the browser?
+- HOR annotations https://docs.google.com/spreadsheets/d/1IdV_uxTYJWLjDztAwAfOKF7TD-eRtJZu0EvdWvzTqD0/

@@ -1,0 +1,98 @@
+import os
+from os import path as osp
+import glob
+import shutil
+import tempfile
+from pycbio.sys import fileOps
+import pipettor
+
+asmName = "cenSat1"
+
+resultsDir = "/nanopore/markd/t2t-centromere/T2T_cenSat"
+
+##
+# output directories
+##
+hubDir = osp.join(resultsDir, "hub")
+dataDir = osp.join(resultsDir, "data")
+asmHubDir = osp.join(hubDir, asmName)
+
+asmSrcDir = "/public/groups/nanopore/karen/chm13/cenSat_WG/assembly"
+
+##
+# hub files
+##
+hubSrcDir = "../../hub"
+def findHubFiles():
+    prelen = len(Path(hubSrcDir).parts)
+    return [osp.join(*p.parts[prelen:])
+            for  p in (list(Path(hubSrcDir).rglob("*.txt"))
+                       + list(Path(hubSrcDir).rglob("*.html")))]
+hubFiles = findHubFiles()
+hubInFiles = [osp.join(hubSrcDir, f) for f in hubFiles]
+hubOutFiles = [osp.join(hubDir, f) for f in hubFiles]
+
+##
+# inputs (need in multiple places)
+##
+centroRegionBeds = glob.glob(osp.join(asmSrcDir, "chr*/cen*_entireALR.bed"))
+
+
+##
+# results
+##
+twoBit = osp.join(asmHubDir, asmName + ".2bit")
+chromSizes = osp.join(asmHubDir, asmName + ".sizes")
+centroRegionsBigBed = osp.join(asmHubDir, "centroRegions.bigBed")
+
+allResults = [twoBit, chromSizes, centroRegionsBigBed] + hubOutFiles
+
+###
+# rule that drives everything
+###
+
+rule all:
+    input: allResults
+
+rule clean:
+    run:
+        fileOps.rmFiles(*allResults)
+
+
+
+###
+# genome file
+###
+genomeFasta = osp.join(asmSrcDir, "chm13_hicanu_hifi_20k.fasta")
+
+rule genomeSeqs:
+    input: genomeFasta, centroRegionBeds
+    output: twoBit, chromSizes
+    run:
+        with tempfile.NamedTemporaryFile() as regionsFh:
+            pipettor.run(["cut", "-f", "1"] + centroRegionBeds, stdout=regionsFh.name)
+            pipettor.run([("faSomeRecords", genomeFasta, regionsFh.name, "/dev/stdout"),
+                          ("faToTwoBit", "/dev/stdin", twoBit)])
+            pipettor.run(["twoBitInfo", twoBit, chromSizes])
+
+
+###
+# copy hub files
+###
+rule hubText:
+    input: hubInFiles
+    output: hubOutFiles
+    run:
+        for i in range(len(input)):
+            shutil.copyfile(input[i], output[i])
+
+###
+# centromere region track
+###
+rule centroRegionsTrack:
+    input: centroRegionBeds, chromSizes
+    output: centroRegionsBigBed
+    run:
+        with tempfile.NamedTemporaryFile() as inBedFh:
+            pipettor.run(["sort", "-k1,1", "-k2,2n"] + centroRegionBeds, stdout=inBedFh.name)
+            pipettor.run(["bedToBigBed", "-tab", inBedFh.name, chromSizes, centroRegionsBigBed])

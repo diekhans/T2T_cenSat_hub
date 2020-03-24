@@ -1,0 +1,10 @@
+genome cenSat1
+trackDb cenSat1/trackDb.txt
+groups cenSat1/groups.txt
+description T2T centromeric satellites release 1
+twoBitPath cenSat1/cenSat1.2bit
+organism Homo sapiens
+defaultPos tig00001118:34285393-37807869
+scientificName Homo sapiens
+htmlPath cenSat1/description.html
+
