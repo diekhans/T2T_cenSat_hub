@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """
     Usage: ./RM2Bed.py [--help] [--out_dir <path>]
+                       [--stdout]
                        [--log_level <number>]
                        [--out_prefix <string>]
                        [--sort_criterion 'family'|'class'|
@@ -32,6 +33,7 @@
                         working directory.
         --out_prefix: prefix for all output filenames.
                         Default=input file prefix
+        --stdout    : send output to stdout
         --log_level : verbosity of log messages.
 
     Overlap Resolution:
@@ -414,6 +416,7 @@ def main(*args):
     parser.add_argument('-h', '--help', action=_CustomUsageAction )
     parser.add_argument("-l", "--log_level", default="INFO")
     parser.add_argument('-d', '--out_dir')
+    parser.add_argument('--stdout', action="store_true", default=False)
     parser.add_argument('-sp', '--split', type=str, help='Split into files based on name, family, class? This is optional.')
     parser.add_argument('-p', '--out_prefix', type=str, help='Prefix to use for output file - default is first field of input filename')
     parser.add_argument('-m', '--min_length', type=int, help='Minimum size of hit to include in sorted file')
@@ -424,6 +427,8 @@ def main(*args):
     parser.add_argument("-o", "--ovlp_resolution", type=str, help='Options are higher_score, longer_element, and lower_divergence. Optional')
 
     args = parser.parse_args()
+    if args.split and args.stdout:
+        parser.error("can't specify both --split and --stdout")
 
     # Setup logging and script timing
     logging.basicConfig(format='')
@@ -758,8 +763,11 @@ def main(*args):
             print('Splitting options are by name, family, and class.')
 
     # Write as monolithic file
-    LOGGER.info("Creating: " + file_prefix + '_rm.bed' )
-    annot_dataframe.to_csv(file_prefix + '_rm.bed', sep='\t', header=False, index=False)
+    if args.stdout:
+        annot_dataframe.to_csv(sys.stdout, sep='\t', header=False, index=False)
+    else:
+        LOGGER.info("Creating: " + file_prefix + '_rm.bed' )
+        annot_dataframe.to_csv(file_prefix + '_rm.bed', sep='\t', header=False, index=False)
 
 
     #
@@ -776,4 +784,3 @@ def main(*args):
 #
 if __name__ == '__main__':
     main(*sys.argv)
-

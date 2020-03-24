@@ -8,6 +8,8 @@ import pipettor
 
 asmName = "cenSat1"
 
+# must create cenSat1.seqs with the list of contigs
+
 resultsDir = "/nanopore/markd/t2t-centromere/T2T_cenSat"
 
 ##
@@ -35,17 +37,27 @@ hubOutFiles = [osp.join(hubDir, f) for f in hubFiles]
 ##
 # inputs (need in multiple places)
 ##
+asmSeqs = osp.join(asmHubDir, asmName + ".seqs")
 centroRegionBeds = glob.glob(osp.join(asmSrcDir, "chr*/cen*_entireALR.bed"))
-
+contigs = list(fileOps.readFileLines(asmSeqs))
 
 ##
 # results
 ##
-twoBit = osp.join(asmHubDir, asmName + ".2bit")
-chromSizes = osp.join(asmHubDir, asmName + ".sizes")
+asmTwoBit = osp.join(asmHubDir, asmName + ".2bit")
+asmSizes = osp.join(asmHubDir, asmName + ".sizes")
 centroRegionsBigBed = osp.join(asmHubDir, "centroRegions.bigBed")
+rmskBigBed = osp.join(asmHubDir, "rmsk.bigBed")
 
-allResults = [twoBit, chromSizes, centroRegionsBigBed] + hubOutFiles
+allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
+              rmskBigBed] + hubOutFiles
+
+##
+# misc defs
+##
+bedSortCmd = ["sort", "-k1,1", "-k2,2n"]
+binDir = "../../bin"
+fixTigWithRangeBedCmd = osp.join(binDir, "fixTigWithRangeBed")
 
 ###
 # rule that drives everything
@@ -66,14 +78,12 @@ rule clean:
 genomeFasta = osp.join(asmSrcDir, "chm13_hicanu_hifi_20k.fasta")
 
 rule genomeSeqs:
-    input: genomeFasta, centroRegionBeds
-    output: twoBit, chromSizes
+    input: genomeFasta, centroRegionBeds, asmSeqs
+    output: asmTwoBit, asmSizes
     run:
-        with tempfile.NamedTemporaryFile() as regionsFh:
-            pipettor.run(["cut", "-f", "1"] + centroRegionBeds, stdout=regionsFh.name)
-            pipettor.run([("faSomeRecords", genomeFasta, regionsFh.name, "/dev/stdout"),
-                          ("faToTwoBit", "/dev/stdin", twoBit)])
-            pipettor.run(["twoBitInfo", twoBit, chromSizes])
+        pipettor.run([("faSomeRecords", genomeFasta, asmSeqs, "/dev/stdout"),
+                      ("faToTwoBit", "/dev/stdin", asmTwoBit)])
+        pipettor.run(["twoBitInfo", asmTwoBit, asmSizes])
 
 
 ###
@@ -90,9 +100,33 @@ rule hubText:
 # centromere region track
 ###
 rule centroRegionsTrack:
-    input: centroRegionBeds, chromSizes
+    input: centroRegionBeds, asmSizes
     output: centroRegionsBigBed
     run:
-        with tempfile.NamedTemporaryFile() as inBedFh:
-            pipettor.run(["sort", "-k1,1", "-k2,2n"] + centroRegionBeds, stdout=inBedFh.name)
-            pipettor.run(["bedToBigBed", "-tab", inBedFh.name, chromSizes, centroRegionsBigBed])
+        with tempfile.NamedTemporaryFile() as bedFh:
+            pipettor.run(bedSortCmd + centroRegionBeds, stdout=bedFh.name)
+            pipettor.run(["bedToBigBed", "-tab", bedFh.name, asmSizes, centroRegionsBigBed])
+
+
+##
+# repeat masker
+##
+rmskDir = osp.join(asmSrcDir, "rm")
+rmskOutFiles = [glob.glob(osp.join(rmskDir, tig + ".out/*.fasta.out"))[0]
+                for tig in contigs]
+rule rmsk:
+    input: rmskOutFiles, asmSeqs
+    output: rmskBigBed
+    run:
+        # regions are named in the form tig00018121:0-1387635,
+        # but cover the whole contig
+        with tempfile.NamedTemporaryFile() as bed1Fh:
+            for f in rmskOutFiles:
+                bed1Fh.seek(0, 2)
+                print("@@@",f)
+                pipettor.run(["rmsk2bed"], stdin=f, stdout=bed1Fh)
+            with tempfile.NamedTemporaryFile() as bed2Fh:
+                pipettor.run([["tawk", '{print $1, $2, $3, $4"/"$11, $5, $6}', bed1Fh.name],
+                              [fixTigWithRangeBedCmd],
+                              bedSortCmd], stdout=bed2Fh.name)
+                pipettor.run(["bedToBigBed", "-tab", bed2Fh.name, asmSizes, rmskBigBed])
