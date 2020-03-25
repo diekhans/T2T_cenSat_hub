@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# extract from RepeatMaster distribution and modified to add --stdout
 """
     Usage: ./RM2Bed.py [--help] [--out_dir <path>]
                        [--stdout]

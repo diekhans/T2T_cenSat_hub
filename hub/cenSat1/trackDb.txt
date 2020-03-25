@@ -31,8 +31,28 @@ shortLabel Repeat Masker
 longLabel Repeat Masker
 type bigBed
 visibility hide
-color 218,32,165
+itemRgb on
 bigDataUrl rmsk.bigBed
 priority 11
+group annotation
+
+track horArray
+shortLabel HOR Array
+longLabel HOR Array
+color 100,100,10
+type bigBed
+visibility hide
+bigDataUrl horArray.bigBed
+priority 12
+group annotation
+
+track horHmm
+shortLabel HOR HMM
+longLabel HOR HMM
+color 100,10,100
+type bigBed
+visibility hide
+bigDataUrl horHmm.bigBed
+priority 13
 group annotation
 

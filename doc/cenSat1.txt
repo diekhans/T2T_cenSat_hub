@@ -51,13 +51,41 @@
    mkdir chm13_20k_hiFi_master0103.dnadiff
    tar -C chm13_20k_hiFi_master0103.dnadiff -xf chm13_20k_hiFi_master0103.dnadiff.tar.gz
 
+  # alignments of contigs to GRCh38
+   - asm.contigs.fasta.againstPrimary.delta.diff.1coords
+   - done with nucmer http://mummer.sourceforge.net/
+
+   - hsapiens.chr.map -  mapping of NCBI ids GRCh38 ids (CM000663.2) to chrososms
+
+  # from Karen
+  hg38_ct_AShg38M1SFsv22_3171.txt
+
 ################################################################################
+# 2020-03-25 HOR arrays Markd
+- HOR arrays, /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/
+  - cenSat_HORarray.bed
+    -is the start and end of each centromeric satellite/tandem repeat (HOR) array.
+  - cenSat_HOR_hmmOut.bed
+     - taking the HOR.fasta for each of those arrays, creating a hmmer profile,
+       and generating start and end coordinates for the repeating unit
+  - https://docs.google.com/spreadsheets/d/1IdV_uxTYJWLjDztAwAfOKF7TD-eRtJZu0EvdWvzTqD0/
+     - intersecting that output (linked below table), with the array start and stop
+     - c0: contig ID, c1: contig_S, c2: contig_E, c3 HOR-rpt
+       Start and End positions (noted: Start_End)
 ################################################################################
 todo:
-- HOR annotations https://docs.google.com/spreadsheets/d/1IdV_uxTYJWLjDztAwAfOKF7TD-eRtJZu0EvdWvzTqD0/
-- HOR arrays, /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/
-- RepeatMaster /public/groups/nanopore/karen/chm13/cenSat_WG/assembly/rm
+- Can we do liftOver to hicanu tigs from hg38?
+  One of our collaborators sent a list of annotated satellite coordinates hg38_ct_AShg38M1SFsv22_  Karen quickly pulled out fasta from hg38 and am aligning to hicanu.
+  This is to extend the labels in the table to other monomers that are near
+  identical (or even identical) to the ones in hg38, but new to the hicanu asms
+  I usually just filter based on alignment span and edit distance in the sam
+  output and provide bed
+- dnadiffs track
+  asm.contigs.fasta.againstPrimary.delta.diff.1coords
 
-### debug
-/public/groups/nanopore/karen/chm13/cenSat_WG/assembly/rm/tig00001550.out/25.fasta.out doesn't seem to be a RepeatMasker .out file, first line seen:
-  bit   perc perc perc  query                    position in query                 matching         repeat                position in repeat
+  c12 (hicanu asm ID)
+  c8: hicanu tig length
+  c2: hicanuTig_S
+  c3: hicanuTig_E
+  c6: alignment score
+  c4 and c5 are span (w/ and w/o gaps, I assumed)
