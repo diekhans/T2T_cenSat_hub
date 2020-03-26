@@ -67,6 +67,7 @@ bedSortCmd = ["sort", "-k1,1", "-k2,2n"]
 binDir = "../../bin"
 editRepeatMaskerBed = osp.join(binDir, "editRepeatMaskerBed")
 RM2Bed = osp.join(binDir, "RM2Bed.py")
+showCoords = "../../../packages/MUMmer3.23/show-coords"
 
 ##
 # functions to do common stuff
@@ -165,6 +166,10 @@ rule horHmm:
     run:
         buildBigBed(horHmmBed, horHmmBigBed, filterCmd=["cut", "-f", "1-4"])
 
+##
+# SF tracks
+##
+
 allGenomeSFBed = osp.join(phase1SrcDir, "all_genome_SF_track.chm13_hicanu_hifi_20k.bed")
 rule allGenomeSF:
     input: allGenomeSFBed, asmSizes
@@ -185,3 +190,8 @@ rule pubMon:
     output: pubMonBigBed
     run:
         buildBigBed(pubMonBed, pubMonBigBed, bedType="bed9")
+
+##
+# nunmer alignments
+##
+rule hg38T2TMappings:

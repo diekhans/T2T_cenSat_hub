@@ -6,11 +6,14 @@ import re
 from collections import namedtuple
 from pycbio.sys.color import Color
 from pycbio.hgdata.bed import Bed
+from pycbio.tsv import TsvReader
 
 def parseArgs():
     usage = """convert output of MUMmer show-coords -T to BED
 """
     parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('--chromAliasTsv', default=None,
+                        help="map sequence names using this file")
     parser.add_argument('targetSeq', choices=("seq1", "seq2"),
                         help="target sequence")
     parser.add_argument('inCoords', nargs='?', default=None,
@@ -18,6 +21,9 @@ def parseArgs():
     parser.add_argument('outBed', nargs='?', default=None,
                         help="output BED file")
     return parser.parse_args()
+
+def loadChromAliases(chromAliasTsv):
+    return {r.alias: r for r in TsvReader(chromAliasTsv)}
 
 class NumcerCoords(namedtuple("NumcerCoords", ("s1", "e1", "s2", "e2", "len1", "len2",
                                                "perId", "seq1", "seq2"))):
@@ -46,18 +52,23 @@ def loadNumcerCoords(fh, swapSides):
         coords.append(c)
     return coords
 
-def coordToBed(coord):
-    return Bed(coord.seq1, coord.s1, coord.e1, "{}:{}-{}".format(coord.seq2, coord.s2, coord.e2))
+def transAlias(chromAliases, seq):
+    a = chromAliases.get(seq)
+    return a.chrom if a is not None else seq
 
-
+def coordToBed(coord, chromAliases):
+    seq1 = transAlias(chromAliases, coord.seq1)
+    seq2 = transAlias(chromAliases, coord.seq2)
+    return Bed(seq1, coord.s1, coord.e1, "{}:{}-{}".format(seq2, coord.s2, coord.e2))
 
 def main(args):
+    chromAliases = loadChromAliases(args.chromAliasTsv) if args.chromAliasTsv is not None else {}
     inCoordsFh = open(args.inCoords) if args.inCoords is not None else sys.stdin
     coords = loadNumcerCoords(inCoordsFh, (args.targetSeq == "seq1"))
 
     outBedFh = open(args.outBed, "w") if args.outBed is not None else sys.stdout
     for coord in coords:
-        coordToBed(coord).write(outBedFh)
+        coordToBed(coord, chromAliases).write(outBedFh)
     if args.outBed is not None:
         outBedFh.close()
 
