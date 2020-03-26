@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+import re
+from collections import namedtuple
+from pycbio.sys.color import Color
+from pycbio.hgdata.bed import Bed
+
+def parseArgs():
+    usage = """convert output of MUMmer show-coords -T to BED
+"""
+    parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('targetSeq', choices=("seq1", "seq2"),
+                        help="target sequence")
+    parser.add_argument('inCoords', nargs='?', default=None,
+                        help="input coordinates file")
+    parser.add_argument('outBed', nargs='?', default=None,
+                        help="output BED file")
+    return parser.parse_args()
+
+class NumcerCoords(namedtuple("NumcerCoords", ("s1", "e1", "s2", "e2", "len1", "len2",
+                                               "perId", "seq1", "seq2"))):
+    def __new__(cls, s1, e1, s2, e2, len1, len2, perId, seq1, seq2):
+        return super(NumcerCoords, cls).__new__(cls, int(s1)-1, int(e1), int(s2)-1, int(e2), int(len1), int(len2), float(perId), seq1, seq2)
+
+    def swap(self):
+        return NumcerCoords(self.s2, self.e2, self.s1, self.e1, self.len2, self.len1, self.perId, self.seq2, self.seq1)
+
+def parseNumcerCoords(line):
+    cols = line.split('\t')
+    if len(cols) != 9:
+        raise Exception("expected 9 columns: " + line)
+    return NumcerCoords(*cols)
+
+def loadNumcerCoords(fh, swapSides):
+    # [S1]	[E1]	[S2]	[E2]	[LEN 1]	[LEN 2]	[% IDY]	[TAGS]
+    for line in fh:
+        if line.startswith("[S1]"):
+            break
+    coords = []
+    for line in fh:
+        c = parseNumcerCoords(line[0:-1])
+        if swapSides:
+            c = c.swap()
+        coords.append(c)
+    return coords
+
+def coordToBed(coord):
+    return Bed(coord.seq1, coord.s1, coord.e1, "{}:{}-{}".format(coord.seq2, coord.s2, coord.e2))
+
+
+
+def main(args):
+    inCoordsFh = open(args.inCoords) if args.inCoords is not None else sys.stdin
+    coords = loadNumcerCoords(inCoordsFh, (args.targetSeq == "seq1"))
+
+    outBedFh = open(args.outBed, "w") if args.outBed is not None else sys.stdout
+    for coord in coords:
+        coordToBed(coord).write(outBedFh)
+    if args.outBed is not None:
+        outBedFh.close()
+
+main(parseArgs())

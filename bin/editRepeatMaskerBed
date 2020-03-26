@@ -14,7 +14,7 @@ and correct coordinates.
     parser = argparse.ArgumentParser(description=usage)
     parser.add_argument('inBed', nargs='?', default=None,
                         help="input BED file")
-    parser.add_argument('outBed', nargs='?', default=None,  # can't be /dev/stdout,
+    parser.add_argument('outBed', nargs='?', default=None,
                         help="output BED file")
     return parser.parse_args()
 
