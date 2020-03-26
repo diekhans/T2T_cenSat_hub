@@ -29,7 +29,7 @@ group assembly
 track rmsk
 shortLabel Repeat Masker
 longLabel Repeat Masker
-type bigBed
+type bigBed 9
 visibility hide
 itemRgb on
 bigDataUrl rmsk.bigBed
@@ -54,5 +54,38 @@ type bigBed
 visibility hide
 bigDataUrl horHmm.bigBed
 priority 13
+group annotation
+
+track allGenomeSF
+shortLabel All-genome SF
+longLabel All-genome Suprachromosomal families
+color 120,10,70
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl allGenomeSF.bigBed
+priority 14
+group annotation
+
+track sf1Hor
+shortLabel SF1 HOR
+longLabel Suprachromosomal families 1 HOR
+color 90,30,100
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl sf1Hor.bigBed
+priority 15
+group annotation
+
+track pubMon
+shortLabel Published monomers
+longLabel Published monomers
+color 100,90,30
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl pubMon.bigBed
+priority 16
 group annotation
 

@@ -89,3 +89,13 @@ todo:
   c3: hicanuTig_E
   c6: alignment score
   c4 and c5 are span (w/ and w/o gaps, I assumed)
+
+- /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser
+   all_genome_SF_track.chm13_hicanu_hifi_20k.bed  All-genome SF
+   SF1_HOR_track.chm13_hicanu_hifi_20k.bed  SF1 HOR
+      Suprachromosomal families
+   pubMon_track.chm13_hicanu_hifi_20k.bed  published_Mon  monomers”.
+
+- Her alpha satellite track in her figures are orange, but in the browser they are blue?
+Class: ALR/Alpha
+Family: Satellite/centr 

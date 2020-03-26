@@ -20,10 +20,11 @@ and correct coordinates.
 
 def mkColor(s):
     return Color.fromHtmlColor(s)
-repClasscolorTable = {
+# either class or name here
+repColorTable = {
     "(CATTC)n": mkColor("#E87C71"),
     "(GAATC)n": mkColor("#E28455"),
-    "ALR/Αlpha": mkColor("#D78C32"),
+    "ALR/Alpha": mkColor("#D78C32"),
     "BSR/Beta": mkColor("#E370AB"),
     "CER": mkColor("#CE9334"),
     "DNA": mkColor("#C19935"),
@@ -61,15 +62,23 @@ def fixChrom(rec):
             raise Exception("coordinates encoded in chrom name should start at '0': {}".format(rec.chrom))
         rec.chrom = m.group(1)
 
+def lookupColor(*names):
+    for n in names:
+        clr = repColorTable.get(n)
+        if clr is not None:
+            return clr
+    return defaultColor
+
 def editBedRec(rec):
     repClass, repFamily = rec.extraCols[0:2]
     rec.thickStart = rec.chromStart
     rec.thickEnd = rec.chromEnd
-    rec.itemRgb = repClasscolorTable.get(repClass, defaultColor).toRgb8Str()
+    rec.itemRgb = lookupColor(repClass, repFamily, repClass + "/" + repFamily, rec.name).toRgb8Str()
     rec.extraCols = None
-    rec.name += "/" + repClass
+    rec.name += "[" + repClass
     if repFamily != "unknown":
         rec.name += "/" + repFamily
+    rec.name += "]"
     fixChrom(rec)
     rec.score = "0"
     return rec

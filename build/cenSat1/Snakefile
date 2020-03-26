@@ -52,28 +52,36 @@ centroRegionsBigBed = osp.join(asmHubDir, "centroRegions.bigBed")
 rmskBigBed = osp.join(asmHubDir, "rmsk.bigBed")
 horArrayBigBed = osp.join(asmHubDir, "horArray.bigBed")
 horHmmBigBed = osp.join(asmHubDir, "horHmm.bigBed")
+allGenomeSFBigBed = osp.join(asmHubDir, "allGenomeSF.bigBed")
+sf1HorBigBed = osp.join(asmHubDir, "sf1Hor.bigBed")
+pubMonBigBed = osp.join(asmHubDir, "pubMon.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
-              rmskBigBed, horArrayBigBed, horHmmBigBed] + hubOutFiles
+              rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
+              sf1HorBigBed, pubMonBigBed] + hubOutFiles
 
 ##
 # misc defs
 ##
 bedSortCmd = ["sort", "-k1,1", "-k2,2n"]
 binDir = "../../bin"
+editRepeatMaskerBed = osp.join(binDir, "editRepeatMaskerBed")
+RM2Bed = osp.join(binDir, "RM2Bed.py")
 
 ##
 # functions to do common stuff
 ##
-def buildBigBed(inBeds, outBigBed, bedType="bed4", filterCmd=None):
+def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
+    if isinstance(inBeds, str):
+        inBeds = [inBeds]
     with tempfile.NamedTemporaryFile() as bedFh:
-        cmd = [bedSortCmd + inBeds]
+        # discard non-cenSat contigs
+        cmd = [["selectById", 1, asmSeqs, 1] + inBeds,
+               bedSortCmd]
         if filterCmd is not None:
             cmd.append(filterCmd)
         pipettor.run(cmd, stdout=bedFh.name)
         pipettor.run(["bedToBigBed", "-type=" + bedType, "-tab", bedFh.name, asmSizes, outBigBed])
-
-
 
 ###
 # rule that drives everything
@@ -129,19 +137,19 @@ rmskDir = osp.join(asmSrcDir, "rm")
 rmskOutFiles = [glob.glob(osp.join(rmskDir, tig + ".out/*.fasta.out"))[0]
                 for tig in contigs]
 rule rmsk:
-    input: rmskOutFiles, asmSeqs
+    input: rmskOutFiles, asmSeqs, RM2Bed, editRepeatMaskerBed
     output: rmskBigBed
     run:
         # regions are named in the form tig00018121:0-1387635,
         # but cover the whole contig
         with tempfile.NamedTemporaryFile() as bedFh:
             for f in rmskOutFiles:
-                pipettor.run([["../../bin/RM2Bed.py", "--stdout", "--log_level=WARN", f],
-                              [osp.join(binDir, "editRepeatMaskerBed")]], stdout=bedFh)
+                pipettor.run([[RM2Bed, "--stdout", "--log_level=WARN", f],
+                              [editRepeatMaskerBed]], stdout=bedFh)
             buildBigBed([bedFh.name], rmskBigBed, bedType="bed9")
 
 ##
-# HOR arrays
+# HOR arrays, etc
 ##
 horArrayBed = osp.join(phase1SrcDir, "cenSat_HORarray.bed")
 rule horArray:
@@ -150,10 +158,30 @@ rule horArray:
     run:
         buildBigBed([horArrayBed], horArrayBigBed)
 
-
 horHmmBed = osp.join(phase1SrcDir, "cenSat_HOR_hmmOut.bed")
 rule horHmm:
     input: horHmmBed, asmSizes
     output: horHmmBigBed
     run:
-        buildBigBed([horHmmBed], horHmmBigBed, filterCmd=["cut", "-f", "1-4"])
+        buildBigBed(horHmmBed, horHmmBigBed, filterCmd=["cut", "-f", "1-4"])
+
+allGenomeSFBed = osp.join(phase1SrcDir, "all_genome_SF_track.chm13_hicanu_hifi_20k.bed")
+rule allGenomeSF:
+    input: allGenomeSFBed, asmSizes
+    output: allGenomeSFBigBed
+    run:
+        buildBigBed(allGenomeSFBed, allGenomeSFBigBed, bedType="bed9")
+
+sf1HorBed = osp.join(phase1SrcDir, "SF1_HOR_track.chm13_hicanu_hifi_20k.bed")
+rule sf1Hor:
+    input: sf1HorBed, asmSizes
+    output: sf1HorBigBed
+    run:
+        buildBigBed(sf1HorBed, sf1HorBigBed, bedType="bed9")
+
+pubMonBed = osp.join(phase1SrcDir, "pubMon_track.chm13_hicanu_hifi_20k.bed")
+rule pubMon:
+    input: pubMonBed, asmSizes
+    output: pubMonBigBed
+    run:
+        buildBigBed(pubMonBed, pubMonBigBed, bedType="bed9")
