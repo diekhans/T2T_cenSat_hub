@@ -59,7 +59,6 @@ group annotation
 track allGenomeSF
 shortLabel All-genome SF
 longLabel All-genome Suprachromosomal families
-color 120,10,70
 type bigBed 9
 itemRgb on
 visibility hide
@@ -81,11 +80,20 @@ group annotation
 track pubMon
 shortLabel Published monomers
 longLabel Published monomers
-color 100,90,30
 type bigBed 9
 itemRgb on
 visibility hide
 bigDataUrl pubMon.bigBed
 priority 16
+group annotation
+
+track nucmerHg38
+shortLabel GRCh38 alignments
+longLabel GRCh38 centromere alignments
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl hg38CenSat1.bigBed
+priority 17
 group annotation
 

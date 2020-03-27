@@ -16,8 +16,8 @@ resultsDir = "/nanopore/markd/t2t-centromere/T2T_cenSat"
 # output directories
 ##
 hubDir = osp.join(resultsDir, "hub")
-dataDir = osp.join(resultsDir, "data")
 asmHubDir = osp.join(hubDir, asmName)
+asmDataDir = osp.join(asmHubDir, "data")
 
 cenSatWgDir = "/public/groups/nanopore/karen/chm13/cenSat_WG"
 asmSrcDir = osp.join(cenSatWgDir, "assembly")
@@ -55,10 +55,12 @@ horHmmBigBed = osp.join(asmHubDir, "horHmm.bigBed")
 allGenomeSFBigBed = osp.join(asmHubDir, "allGenomeSF.bigBed")
 sf1HorBigBed = osp.join(asmHubDir, "sf1Hor.bigBed")
 pubMonBigBed = osp.join(asmHubDir, "pubMon.bigBed")
+hg38CenSat1BigBed = osp.join(asmHubDir, "hg38CenSat1.bigBed")
+cenSat1Hg38BigBed = osp.join(asmHubDir, "cenSat1Hg38.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
-              sf1HorBigBed, pubMonBigBed] + hubOutFiles
+              sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed] + hubOutFiles
 
 ##
 # misc defs
@@ -68,6 +70,16 @@ binDir = "../../bin"
 editRepeatMaskerBed = osp.join(binDir, "editRepeatMaskerBed")
 RM2Bed = osp.join(binDir, "RM2Bed.py")
 showCoords = "../../../packages/MUMmer3.23/show-coords"
+nucmerToBed = osp.join(binDir, "nucmerToBed")
+
+##
+# debugging
+##
+if True:
+    from pycbio.sys import loggingOps
+    import logging
+    loggingOps.setupStderrLogger("DEBUG")
+    pipettor.setDefaultLogger(logging.getLogger())
 
 ##
 # functions to do common stuff
@@ -147,7 +159,7 @@ rule rmsk:
             for f in rmskOutFiles:
                 pipettor.run([[RM2Bed, "--stdout", "--log_level=WARN", f],
                               [editRepeatMaskerBed]], stdout=bedFh)
-            buildBigBed([bedFh.name], rmskBigBed, bedType="bed9")
+            buildBigBed(bedFh.name, rmskBigBed, bedType="bed9")
 
 ##
 # HOR arrays, etc
@@ -194,4 +206,22 @@ rule pubMon:
 ##
 # nunmer alignments
 ##
-rule hg38T2TMappings:
+tigHg38Delta = osp.join(asmDataDir, "chm13_20k_hiFi_master0103.dnadiff/asm.contigs.fasta.againstPrimary.delta.diff.1delta")
+hg38ChromAlias = osp.join(asmDataDir, "hg38ChromAlias.tsv")
+rule hg38CenSat1Align:
+    input: tigHg38Delta, hg38ChromAlias
+    output: hg38CenSat1BigBed
+    run:
+        with tempfile.NamedTemporaryFile() as bedFh:
+            pipettor.run([[showCoords, "-T", tigHg38Delta],
+                          [nucmerToBed, "--chromAliasTsv=" + hg38ChromAlias, "seq1"]], stdout=bedFh.name)
+            buildBigBed(bedFh.name, hg38CenSat1BigBed, bedType="bed9")
+
+rule cenSat1Hg38Align:
+    input: tigHg38Delta, hg38ChromAlias
+    output: cenSat1Hg38BigBed
+    run:
+        with tempfile.NamedTemporaryFile() as bedFh:
+            pipettor.run([[showCoords, "-T", tigHg38Delta],
+                          [nucmerToBed, "--chromAliasTsv=" + hg38ChromAlias, "seq2"]], stdout=bedFh.name)
+            buildBigBed(bedFh.name, cenSat1Hg38BigBed, bedType="bed9")

@@ -2,11 +2,15 @@
 
 import argparse
 import sys
+import os
 import re
+myBinDir = os.path.normpath(os.path.dirname(sys.argv[0]))
+sys.path.insert(0, os.path.join(myBinDir, "../lib"))
 from collections import namedtuple
 from pycbio.sys.color import Color
 from pycbio.hgdata.bed import Bed
 from pycbio.tsv import TsvReader
+from cenSat.bedColors import getHg38UcscChromColor
 
 def parseArgs():
     usage = """convert output of MUMmer show-coords -T to BED
@@ -26,18 +30,27 @@ def loadChromAliases(chromAliasTsv):
     return {r.alias: r for r in TsvReader(chromAliasTsv)}
 
 class NumcerCoords(namedtuple("NumcerCoords", ("s1", "e1", "s2", "e2", "len1", "len2",
-                                               "perId", "seq1", "seq2"))):
-    def __new__(cls, s1, e1, s2, e2, len1, len2, perId, seq1, seq2):
-        return super(NumcerCoords, cls).__new__(cls, int(s1)-1, int(e1), int(s2)-1, int(e2), int(len1), int(len2), float(perId), seq1, seq2)
+                                               "perId", "seq1", "seq2", "rev1", "rev2"))):
+    def __new__(cls, s1, e1, s2, e2, len1, len2, perId, seq1, seq2, rev1, rev2):
+        return super(NumcerCoords, cls).__new__(cls, s1, e1, s2, e2, len1, len2, perId, seq1, seq2, rev1, rev2)
 
     def swap(self):
-        return NumcerCoords(self.s2, self.e2, self.s1, self.e1, self.len2, self.len1, self.perId, self.seq2, self.seq1)
+        return NumcerCoords(self.s2, self.e2, self.s1, self.e1, self.len2, self.len1, self.perId, self.seq2, self.seq1, self.rev2, self.rev1)
+
+def mkCoordsRight(st, en):
+    if st > en:
+        return (en, st, True)
+    else:
+        return (st, en, False)
 
 def parseNumcerCoords(line):
     cols = line.split('\t')
     if len(cols) != 9:
         raise Exception("expected 9 columns: " + line)
-    return NumcerCoords(*cols)
+    s1, e1, s2, e2, len1, len2 = [int(c) for c in cols[0:6]]
+    s1, e1, rev1 = mkCoordsRight(s1, e1)
+    s2, e2, rev2 = mkCoordsRight(s2, e2)
+    return NumcerCoords(s1 - 1, e1, s2 - 1, e2, len1, len2, float(cols[6]), cols[7], cols[8], rev1, rev2)
 
 def loadNumcerCoords(fh, swapSides):
     # [S1]	[E1]	[S2]	[E2]	[LEN 1]	[LEN 2]	[% IDY]	[TAGS]
@@ -56,10 +69,18 @@ def transAlias(chromAliases, seq):
     a = chromAliases.get(seq)
     return a.chrom if a is not None else seq
 
+def getColor(seq1, seq2):
+    rgb = getHg38UcscChromColor(seq1, useDefault=False)
+    if rgb is None:
+        rgb = getHg38UcscChromColor(seq2)
+    return rgb
+
 def coordToBed(coord, chromAliases):
     seq1 = transAlias(chromAliases, coord.seq1)
     seq2 = transAlias(chromAliases, coord.seq2)
-    return Bed(seq1, coord.s1, coord.e1, "{}:{}-{}".format(seq2, coord.s2, coord.e2))
+    strand = '-' if (coord.rev1 ^ coord.rev2) else '+'
+    return Bed(seq1, coord.s1, coord.e1, "{}:{}-{}".format(seq2, coord.s2, coord.e2), 0,
+               strand, coord.s1, coord.e1, getColor(seq1, seq2))
 
 def main(args):
     chromAliases = loadChromAliases(args.chromAliasTsv) if args.chromAliasTsv is not None else {}

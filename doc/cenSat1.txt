@@ -116,6 +116,4 @@ todo:
       Suprachromosomal families
    pubMon_track.chm13_hicanu_hifi_20k.bed  published_Mon  monomers”.
 
-- Her alpha satellite track in her figures are orange, but in the browser they are blue?
-Class: ALR/Alpha
-Family: Satellite/centr 
+################################################################################
