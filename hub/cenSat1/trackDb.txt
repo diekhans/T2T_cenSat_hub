@@ -89,7 +89,7 @@ group annotation
 
 track nucmerHg38
 shortLabel GRCh38 alignments
-longLabel GRCh38 centromere alignments
+longLabel GRCh38 nucmer alignments
 type bigBed 12
 itemRgb on
 visibility hide
