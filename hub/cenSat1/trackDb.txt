@@ -90,7 +90,7 @@ group annotation
 track nucmerHg38
 shortLabel GRCh38 alignments
 longLabel GRCh38 centromere alignments
-type bigBed 9
+type bigBed 12
 itemRgb on
 visibility hide
 bigDataUrl hg38CenSat1.bigBed

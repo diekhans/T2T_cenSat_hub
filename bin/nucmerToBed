@@ -6,11 +6,14 @@ import os
 import re
 myBinDir = os.path.normpath(os.path.dirname(sys.argv[0]))
 sys.path.insert(0, os.path.join(myBinDir, "../lib"))
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from pycbio.sys.color import Color
 from pycbio.hgdata.bed import Bed
 from pycbio.tsv import TsvReader
 from cenSat.bedColors import getHg38UcscChromColor
+
+# naive chaining didn't work very well
+doChaining = False
 
 def parseArgs():
     usage = """convert output of MUMmer show-coords -T to BED
@@ -65,6 +68,40 @@ def loadNumcerCoords(fh, swapSides):
         coords.append(c)
     return coords
 
+def partitionCoords(coords):
+    "split by (target, query) pairs"
+    coordParts = defaultdict(list)
+    for c in coords:
+        coordParts[c.seq1, c.seq2].append(c)
+    return coordParts
+
+def popNextChain(coords):
+    prev = coords.pop(0)
+    chained = [prev]
+    i = 0
+    while i < len(coords):
+        c = coords[i]
+        if (c.s1 > prev.e1) and (c.rev1 == prev.rev1) and (c.s2 > prev.e2) and (c.rev2 == prev.rev2):
+            prev = coords.pop(i)
+            chained.append(prev)
+        else:
+            i += 1
+    return chained
+
+def chainCoords(coords):
+    "combine into list that can be chained"
+    coords = sorted(coords, key=lambda c: (c.s1, c.rev1, c.s2, c.rev2, -c.len1))
+    chaineds = []
+    while len(coords) > 0:
+        chaineds.append(popNextChain(coords))
+    return chaineds
+
+def chainCoordParts(coordParts):
+    chained = []
+    for coordPart in coordParts.values():
+        chained.extend(chainCoords(coordPart))
+    return chained
+
 def transAlias(chromAliases, seq):
     a = chromAliases.get(seq)
     return a.chrom if a is not None else seq
@@ -75,21 +112,32 @@ def getColor(seq1, seq2):
         rgb = getHg38UcscChromColor(seq2)
     return rgb
 
-def coordToBed(coord, chromAliases):
-    seq1 = transAlias(chromAliases, coord.seq1)
-    seq2 = transAlias(chromAliases, coord.seq2)
-    strand = '-' if (coord.rev1 ^ coord.rev2) else '+'
-    return Bed(seq1, coord.s1, coord.e1, "{}:{}-{}".format(seq2, coord.s2, coord.e2), 0,
-               strand, coord.s1, coord.e1, getColor(seq1, seq2))
+def coordToBed(coordsChain, chromAliases):
+    coord0 = coordsChain[0]
+    seq1 = transAlias(chromAliases, coord0.seq1)
+    seq2 = transAlias(chromAliases, coord0.seq2)
+    strand = '-' if (coord0.rev1 ^ coord0.rev2) else '+'
+    s1 = coord0.s1
+    e1 = coordsChain[-1].e1
+    s2 = coord0.s2
+    e2 = coordsChain[-1].e2
+    blocks = [Bed.Block(c.s1, c.e1) for c in coordsChain]
+    return Bed(seq1, s1, e1, "{}:{}-{}".format(seq2, s2, e2), 0,
+               strand, s1, e1, getColor(seq1, seq2), blocks)
 
 def main(args):
     chromAliases = loadChromAliases(args.chromAliasTsv) if args.chromAliasTsv is not None else {}
     inCoordsFh = open(args.inCoords) if args.inCoords is not None else sys.stdin
     coords = loadNumcerCoords(inCoordsFh, (args.targetSeq == "seq1"))
-
+    if doChaining:
+        # naive chaing
+        coordParts = partitionCoords(coords)
+        coordsChains = chainCoordParts(coordParts)
+    else:
+        coordsChains = [[c] for c in coords]
     outBedFh = open(args.outBed, "w") if args.outBed is not None else sys.stdout
-    for coord in coords:
-        coordToBed(coord, chromAliases).write(outBedFh)
+    for coordsChain in coordsChains:
+        coordToBed(coordsChain, chromAliases).write(outBedFh)
     if args.outBed is not None:
         outBedFh.close()
 

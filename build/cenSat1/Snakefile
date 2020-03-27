@@ -215,7 +215,7 @@ rule hg38CenSat1Align:
         with tempfile.NamedTemporaryFile() as bedFh:
             pipettor.run([[showCoords, "-T", tigHg38Delta],
                           [nucmerToBed, "--chromAliasTsv=" + hg38ChromAlias, "seq1"]], stdout=bedFh.name)
-            buildBigBed(bedFh.name, hg38CenSat1BigBed, bedType="bed9")
+            buildBigBed(bedFh.name, hg38CenSat1BigBed, bedType="bed12")
 
 rule cenSat1Hg38Align:
     input: tigHg38Delta, hg38ChromAlias
@@ -224,4 +224,4 @@ rule cenSat1Hg38Align:
         with tempfile.NamedTemporaryFile() as bedFh:
             pipettor.run([[showCoords, "-T", tigHg38Delta],
                           [nucmerToBed, "--chromAliasTsv=" + hg38ChromAlias, "seq2"]], stdout=bedFh.name)
-            buildBigBed(bedFh.name, cenSat1Hg38BigBed, bedType="bed9")
+            buildBigBed(bedFh.name, cenSat1Hg38BigBed, bedType="bed12")
