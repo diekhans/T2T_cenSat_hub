@@ -130,7 +130,7 @@ def main(args):
     inCoordsFh = open(args.inCoords) if args.inCoords is not None else sys.stdin
     coords = loadNumcerCoords(inCoordsFh, (args.targetSeq == "seq1"))
     if doChaining:
-        # naive chaing
+        # naive chaining doesn;'t work very well
         coordParts = partitionCoords(coords)
         coordsChains = chainCoordParts(coordParts)
     else:
