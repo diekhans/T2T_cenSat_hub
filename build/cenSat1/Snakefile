@@ -57,10 +57,11 @@ sf1HorBigBed = osp.join(asmHubDir, "sf1Hor.bigBed")
 pubMonBigBed = osp.join(asmHubDir, "pubMon.bigBed")
 hg38CenSat1BigBed = osp.join(asmHubDir, "hg38CenSat1.bigBed")
 cenSat1Hg38BigBed = osp.join(asmHubDir, "cenSat1Hg38.bigBed")
-
+decompositionBigBed = osp.join(asmHubDir, "decomposition.bigBed")
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
-              sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed] + hubOutFiles
+              sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed,
+              decompositionBigBed] + hubOutFiles
 
 ##
 # misc defs
@@ -225,3 +226,13 @@ rule cenSat1Hg38Align:
             pipettor.run([[showCoords, "-T", tigHg38Delta],
                           [nucmerToBed, "--chromAliasTsv=" + hg38ChromAlias, "seq2"]], stdout=bedFh.name)
             buildBigBed(bedFh.name, cenSat1Hg38BigBed, bedType="bed12")
+
+##
+# decomposition
+decompBeds = list(glob.glob(osp.join(phase1SrcDir, "decomposition_cen*.bed")))
+rule decomp:
+    input: decompBeds
+    output: decompositionBigBed
+    run:
+        buildBigBed(decompBeds, decompositionBigBed, bedType="bed9",
+                    filterCmd=[osp.join(binDir, "fixBedScore")])

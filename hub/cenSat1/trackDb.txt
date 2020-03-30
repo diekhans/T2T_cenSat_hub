@@ -97,3 +97,13 @@ bigDataUrl hg38CenSat1.bigBed
 priority 17
 group annotation
 
+track decomposition
+shortLabel Decomposition
+longLabel Decomposition
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl decomposition.bigBed
+priority 18
+group annotation
+
