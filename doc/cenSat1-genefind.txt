@@ -1,0 +1,23 @@
+This file contains notes on looking for genes inside of cenSat1 centromere regions.
+
+Working directory is:
+   /nanopore/markd/t2t-centromere/T2T_cenSat/genefind/cenSat1
+
+all paths are relative to this unless other noted.
+
+################################################################################
+# 2020-03-31 markd Build cenSat1 2bit with non-centromere and HOR arrays masked
+
+# get mask out regions outside of centromere and HOR arrays
+
+  bigBedToBed ../../hub/cenSat1/centroRegions.bigBed tmp/centroRegions.bed
+  bedtools complement -g ../../hub/cenSat1/cenSat1.sizes -i tmp/centroRegions.bed > tmp/not-centroRegions.bed
+  bigBedToBed ../../hub/cenSat1/horArray.bigBed tmp/horArray.bed
+  cat tmp/not-centroRegions.bed tmp/horArray.bed > tmp/mask.bed
+  twoBitMask ../../hub/cenSat1/cenSat1.2bit tmp/mask.bed data/cenSat1.hor-mask.2bit
+
+  # verify
+  twoBitToFa data/cenSat1.hor-mask.2bit tmp/check.fa
+  faSize tmp/check.fa
+  %98.39 masked total, %98.39 masked real
+  ################################################################################
