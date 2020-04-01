@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+import os.path as osp
+import re
+from pycbio.sys.color import Color
+from pycbio.hgdata.bed import BedReader
+
+
+def parseArgs():
+    usage = """combine centromere region files in the form chr*/cen*_entireALR.bed, setting
+    name from file name"""
+    parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('--outBed', default=sys.stdout,
+                        type=argparse.FileType('w'),
+                        help="output BED file, default is sto")
+    parser.add_argument('inBeds', nargs='+',
+                        help="input BEDs file")
+    return parser.parse_args()
+
+def editBedRec(bedFile, rec):
+    m = re.match("^(cen.+)_entireALR\\.bed$", osp.basename(bedFile))
+    if m is None:
+        raise Exception("expecting file name in the form */cen*_entireALR.bed: {}".format(bedFile))
+    rec.name = m.group(1)
+    return rec
+
+def processBedFile(inBed, outBedFh):
+    for rec in BedReader(inBed):
+        editBedRec(inBed, rec).write(outBedFh)
+
+def main(args):
+    for inBed in args.inBeds:
+        processBedFile(inBed, args.outBed)
+    args.outBed.close()
+
+main(parseArgs())

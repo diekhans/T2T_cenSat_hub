@@ -7,6 +7,7 @@ from pycbio.sys import fileOps
 import pipettor
 
 asmName = "cenSat1"
+os.environ["PATH"] = "../../bin:" + os.environ["PATH"]
 
 # must create cenSat1.seqs with the list of contigs
 
@@ -40,7 +41,6 @@ hubOutFiles = [osp.join(hubDir, f) for f in hubFiles]
 # inputs (need in multiple places)
 ##
 asmSeqs = osp.join(asmHubDir, asmName + ".seqs")
-centroRegionBeds = glob.glob(osp.join(asmSrcDir, "chr*/cen*_entireALR.bed"))
 contigs = list(fileOps.readFileLines(asmSeqs))
 
 ##
@@ -67,11 +67,7 @@ allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
 # misc defs
 ##
 bedSortCmd = ["sort", "-k1,1", "-k2,2n"]
-binDir = "../../bin"
-editRepeatMaskerBed = osp.join(binDir, "editRepeatMaskerBed")
-RM2Bed = osp.join(binDir, "RM2Bed.py")
 showCoords = "../../../packages/MUMmer3.23/show-coords"
-nucmerToBed = osp.join(binDir, "nucmerToBed")
 
 ##
 # debugging
@@ -81,6 +77,7 @@ if True:
     import logging
     loggingOps.setupStderrLogger("DEBUG")
     pipettor.setDefaultLogger(logging.getLogger())
+bigBedKeeptTmp = False
 
 ##
 # functions to do common stuff
@@ -88,7 +85,7 @@ if True:
 def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
     if isinstance(inBeds, str):
         inBeds = [inBeds]
-    with tempfile.NamedTemporaryFile() as bedFh:
+    with tempfile.NamedTemporaryFile(delete=not bigBedKeeptTmp) as bedFh:
         # discard non-cenSat contigs
         cmd = [["selectById", 1, asmSeqs, 1] + inBeds,
                bedSortCmd]
@@ -116,7 +113,7 @@ rule clean:
 genomeFasta = osp.join(asmSrcDir, "chm13_hicanu_hifi_20k.fasta")
 
 rule genomeSeqs:
-    input: genomeFasta, centroRegionBeds, asmSeqs
+    input: genomeFasta, asmSeqs
     output: asmTwoBit, asmSizes
     run:
         pipettor.run([("faSomeRecords", genomeFasta, asmSeqs, "/dev/stdout"),
@@ -137,11 +134,14 @@ rule hubText:
 ###
 # centromere region track
 ###
+centroRegionBeds = glob.glob(osp.join(asmSrcDir, "chr*/cen*_entireALR.bed"))
 rule centroRegionsTrack:
     input: centroRegionBeds, asmSizes
     output: centroRegionsBigBed
     run:
-        buildBigBed(centroRegionBeds, centroRegionsBigBed)
+        with tempfile.NamedTemporaryFile() as bedFh:
+            pipettor.run(["buildCentroRegions"] + centroRegionBeds, stdout=bedFh)
+            buildBigBed(bedFh.name, centroRegionsBigBed)
 
 
 ##
@@ -151,21 +151,21 @@ rmskDir = osp.join(asmSrcDir, "rm")
 rmskOutFiles = [glob.glob(osp.join(rmskDir, tig + ".out/*.fasta.out"))[0]
                 for tig in contigs]
 rule rmsk:
-    input: rmskOutFiles, asmSeqs, RM2Bed, editRepeatMaskerBed
+    input: rmskOutFiles, asmSeqs
     output: rmskBigBed
     run:
         # regions are named in the form tig00018121:0-1387635,
         # but cover the whole contig
         with tempfile.NamedTemporaryFile() as bedFh:
             for f in rmskOutFiles:
-                pipettor.run([[RM2Bed, "--stdout", "--log_level=WARN", f],
-                              [editRepeatMaskerBed]], stdout=bedFh)
+                pipettor.run([["RM2Bed.py", "--stdout", "--log_level=WARN", f],
+                              ["editRepeatMaskerBed"]], stdout=bedFh)
             buildBigBed(bedFh.name, rmskBigBed, bedType="bed9")
 
 ##
 # HOR arrays, etc
 ##
-horArrayBed = osp.join(phase1SrcDir, "cenSat_HORarray.bed")
+horArrayBed = osp.join(phase1SrcDir, "cenSat_HORarray.v1.bed")
 rule horArray:
     input: horArrayBed, asmSizes
     output: horArrayBigBed
@@ -215,7 +215,7 @@ rule hg38CenSat1Align:
     run:
         with tempfile.NamedTemporaryFile() as bedFh:
             pipettor.run([[showCoords, "-T", tigHg38Delta],
-                          [nucmerToBed, "--chromAliasTsv=" + hg38ChromAlias, "seq1"]], stdout=bedFh.name)
+                          ["nucmerToBed", "--chromAliasTsv=" + hg38ChromAlias, "seq1"]], stdout=bedFh.name)
             buildBigBed(bedFh.name, hg38CenSat1BigBed, bedType="bed12")
 
 rule cenSat1Hg38Align:
@@ -235,4 +235,4 @@ rule decomp:
     output: decompositionBigBed
     run:
         buildBigBed(decompBeds, decompositionBigBed, bedType="bed9",
-                    filterCmd=[osp.join(binDir, "fixBedScore")])
+                    filterCmd=["fixBedScore"])

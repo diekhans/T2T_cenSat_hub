@@ -12,9 +12,11 @@ def parseArgs():
 and correct coordinates.
 """
     parser = argparse.ArgumentParser(description=usage)
-    parser.add_argument('inBed', nargs='?', default=None,
+    parser.add_argument('inBed', nargs='?', default=sys.stdin,
+                        type=argparse.FileType('r'),
                         help="input BED file")
-    parser.add_argument('outBed', nargs='?', default=None,
+    parser.add_argument('outBed', nargs='?', default=sys.stdout,
+                        type=argparse.FileType('w'),
                         help="output BED file")
     return parser.parse_args()
 
@@ -85,11 +87,8 @@ def editBedRec(rec):
 
 
 def main(args):
-    inBedFh = open(args.inBed) if args.inBed is not None else sys.stdin
-    outBedFh = open(args.outBed, "w") if args.outBed is not None else sys.stdout
-    for rec in BedReader(inBedFh, numStdCols=6):
-        editBedRec(rec).write(outBedFh)
-    if args.outBed is not None:
-        outBedFh.close()
+    for rec in BedReader(args.inBed, numStdCols=6):
+        editBedRec(rec).write(args.outBed)
+    args.outBed.close()
 
 main(parseArgs())

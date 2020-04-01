@@ -23,9 +23,11 @@ def parseArgs():
                         help="map sequence names using this file")
     parser.add_argument('targetSeq', choices=("seq1", "seq2"),
                         help="target sequence")
-    parser.add_argument('inCoords', nargs='?', default=None,
+    parser.add_argument('inCoords', nargs='?', default=sys.stdin,
+                        type=argparse.FileType('r'),
                         help="input coordinates file")
-    parser.add_argument('outBed', nargs='?', default=None,
+    parser.add_argument('outBed', nargs='?', default=sys.stdout,
+                        type=argparse.FileType('w'),
                         help="output BED file")
     return parser.parse_args()
 
@@ -127,18 +129,15 @@ def coordToBed(coordsChain, chromAliases):
 
 def main(args):
     chromAliases = loadChromAliases(args.chromAliasTsv) if args.chromAliasTsv is not None else {}
-    inCoordsFh = open(args.inCoords) if args.inCoords is not None else sys.stdin
-    coords = loadNumcerCoords(inCoordsFh, (args.targetSeq == "seq1"))
+    coords = loadNumcerCoords(args.inCoords, (args.targetSeq == "seq1"))
     if doChaining:
         # naive chaining doesn;'t work very well
         coordParts = partitionCoords(coords)
         coordsChains = chainCoordParts(coordParts)
     else:
         coordsChains = [[c] for c in coords]
-    outBedFh = open(args.outBed, "w") if args.outBed is not None else sys.stdout
     for coordsChain in coordsChains:
-        coordToBed(coordsChain, chromAliases).write(outBedFh)
-    if args.outBed is not None:
-        outBedFh.close()
+        coordToBed(coordsChain, chromAliases).write(outBed)
+    args.outBed.close()
 
 main(parseArgs())

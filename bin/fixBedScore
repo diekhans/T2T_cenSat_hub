@@ -8,9 +8,11 @@ def parseArgs():
     usage = """keep score in range.
 """
     parser = argparse.ArgumentParser(description=usage)
-    parser.add_argument('inBed', nargs='?', default=None,
+    parser.add_argument('inBed', nargs='?', default=sys.stdin,
+                        type=argparse.FileType('r'),
                         help="input BED file")
-    parser.add_argument('outBed', nargs='?', default=None,
+    parser.add_argument('outBed', nargs='?', default=sys.stdout,
+                        type=argparse.FileType('w'),
                         help="output BED file")
     return parser.parse_args()
 
@@ -26,11 +28,8 @@ def editBedLine(line, outFh):
     print(*row, sep='\t', file=outFh)
 
 def main(args):
-    inBedFh = open(args.inBed) if args.inBed is not None else sys.stdin
-    outBedFh = open(args.outBed, "w") if args.outBed is not None else sys.stdout
-    for line in inBedFh:
-        editBedLine(line[0:-1], outBedFh)
-    if args.outBed is not None:
-        outBedFh.close()
+    for line in args.inBed:
+        editBedLine(line[0:-1], ags.outBed)
+    args.outBed.close()
 
 main(parseArgs())
