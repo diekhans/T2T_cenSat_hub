@@ -29,7 +29,7 @@
     - sf1Hor.bigBed
     - pubMon.bigBed
     - decomposition
-
+    - rawMethCalls
 ################################################################################
 2020-03-19 markd  HiFi alignments to the CHM13 HiCanu assembly
   # from Glennis Logsdon
@@ -115,3 +115,7 @@ todo:
 -
 /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/decomposition_cen[#s].bed
 ################################################################################
+debug
+/public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/tig*_raw_meth_calls.wig
+
+wigToBigWig $wig /nanopore/markd/t2t-centromere/T2T_cenSat/hub/cenSat1/cenSat1.sizes /dev/null

@@ -107,3 +107,12 @@ bigDataUrl decomposition.bigBed
 priority 18
 group annotation
 
+track rawMethCalls
+shortLabel Raw meth
+longLabel Raw methylation calls
+type bigWig
+visibility hide
+bigDataUrl rawMethCalls.bigWig
+priority 19
+group annotation
+

@@ -58,10 +58,13 @@ pubMonBigBed = osp.join(asmHubDir, "pubMon.bigBed")
 hg38CenSat1BigBed = osp.join(asmHubDir, "hg38CenSat1.bigBed")
 cenSat1Hg38BigBed = osp.join(asmHubDir, "cenSat1Hg38.bigBed")
 decompositionBigBed = osp.join(asmHubDir, "decomposition.bigBed")
+rawMethCallsBigWig = osp.join(asmHubDir, "rawMethCalls.bigWig")
+
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
               sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed,
               decompositionBigBed] + hubOutFiles
+# BROKEN: rawMethCallsBigWig
 
 ##
 # misc defs
@@ -77,7 +80,7 @@ if True:
     import logging
     loggingOps.setupStderrLogger("DEBUG")
     pipettor.setDefaultLogger(logging.getLogger())
-bigBedKeeptTmp = False
+bigKeepTmp = False
 
 ##
 # functions to do common stuff
@@ -85,7 +88,7 @@ bigBedKeeptTmp = False
 def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
     if isinstance(inBeds, str):
         inBeds = [inBeds]
-    with tempfile.NamedTemporaryFile(delete=not bigBedKeeptTmp) as bedFh:
+    with tempfile.NamedTemporaryFile(delete=not bigKeepTmp) as bedFh:
         # discard non-cenSat contigs
         cmd = [["selectById", 1, asmSeqs, 1] + inBeds,
                bedSortCmd]
@@ -93,6 +96,16 @@ def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
             cmd.append(filterCmd)
         pipettor.run(cmd, stdout=bedFh.name)
         pipettor.run(["bedToBigBed", "-type=" + bedType, "-tab", bedFh.name, asmSizes, outBigBed])
+
+def buildBigWig(inWigs, outBigWig, *, clip=False):
+    if isinstance(inWigs, str):
+        inWigs = [inWigs]
+    with tempfile.NamedTemporaryFile(delete=not bigKeepTmp) as wigFh:
+        pipettor.run(["cat"] + inWigs, stdout=wigFh.name)
+        opts = []
+        if clip:
+            opts.append("-clip")
+        pipettor.run(["wigToBigWig"] + opts + [wigFh.name, asmSizes, outBigWig])
 
 ###
 # rule that drives everything
@@ -236,3 +249,14 @@ rule decomp:
     run:
         buildBigBed(decompBeds, decompositionBigBed, bedType="bed9",
                     filterCmd=["fixBedScore"])
+
+#
+# raw meth calls
+rawMethCallsWigs = glob.glob(osp.join(phase1SrcDir, "tig*_raw_meth_calls.wig"))
+rule rawMethCalls:
+    input: rawMethCallsWigs
+    output: rawMethCallsBigWig
+    run:
+        # badly broken
+        # had error: chromosome tig00001118 has 126714748 bases, but item ends at 126714756, so clip
+        buildBigWig(rawMethCallsWigs, rawMethCallsBigWig, clip=True)
