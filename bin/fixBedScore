@@ -29,7 +29,7 @@ def editBedLine(line, outFh):
 
 def main(args):
     for line in args.inBed:
-        editBedLine(line[0:-1], ags.outBed)
+        editBedLine(line[0:-1], args.outBed)
     args.outBed.close()
 
 main(parseArgs())

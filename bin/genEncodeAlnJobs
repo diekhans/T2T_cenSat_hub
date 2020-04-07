@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+import os
+import os.path as osp
+from pycbio.tsv import TsvReader
+myBinDir = os.path.normpath(os.path.dirname(sys.argv[0]))
+
+
+def parseArgs():
+    usage = """generate STAR align jobs from encode download metadata"""
+    parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('metadataTsv',
+                        help="ENCODE metadata TSV")
+    parser.add_argument('genomeDir',
+                        help="STAR genome index dir")
+    parser.add_argument('fastqDir',
+                        help="FASTAQ files in this DIR")
+    parser.add_argument('bamDir',
+                        help="BAMs in this dir")
+    parser.add_argument('jobFile',
+                        help="parasol job file")
+
+    return parser.parse_args()
+
+def groupFastqs(facc, byAcc):
+    rec = byAcc.pop(facc, None)  # none if deleted
+    if rec is None:
+        return None
+    if rec.Paired_with == "":
+        return (rec,)
+    rec2 = byAcc.pop(rec.Paired_with)
+    if rec.Paired_end == '1':
+        return (rec, rec2)
+    else:
+        return (rec2, rec)
+
+def loadMetadata(mdTsv):
+    byAcc = {r.File_accession: r
+             for r in TsvReader(mdTsv, columnNameMapper=lambda s: s.replace(' ', '_'))}
+    fastqGrps = []
+    for facc in list(byAcc.keys()):
+        fqs = groupFastqs(facc, byAcc)
+        if fqs is not None:
+            fastqGrps.append(fqs)
+    return fastqGrps
+
+def mkJobCmd(fastqGrp, genomeDir, fastqDir, bamDir):
+    fq1 = fastqGrp[0]
+    cmd = [osp.join(myBinDir, "runEncodeAlign"),
+           "{{check out exist {}}}".format(osp.join(bamDir, fq1.File_accession + ".bam")),
+           genomeDir,
+           osp.join(fastqDir, fq1.File_accession + ".fastq.gz")]
+    if len(fastqGrp) > 1:
+        cmd += [osp.join(fastqDir, fastqGrp[1].File_accession + ".fastq.gz")]
+    return " ".join(cmd)
+
+def writeJobs(fastqGrps, genomeDir, fastqDir, bamDir, jobsFh):
+    for fastqGrp in fastqGrps:
+        print(mkJobCmd(fastqGrp, genomeDir, fastqDir, bamDir), file=jobsFh)
+
+def main(args):
+    fastqGrps = loadMetadata(args.metadataTsv)
+    with open(args.jobFile, "w") as jobsFh:
+        writeJobs(fastqGrps, args.genomeDir, args.fastqDir, args.bamDir, jobsFh)
+
+main(parseArgs())

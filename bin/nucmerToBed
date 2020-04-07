@@ -3,11 +3,9 @@
 import argparse
 import sys
 import os
-import re
 myBinDir = os.path.normpath(os.path.dirname(sys.argv[0]))
 sys.path.insert(0, os.path.join(myBinDir, "../lib"))
 from collections import namedtuple, defaultdict
-from pycbio.sys.color import Color
 from pycbio.hgdata.bed import Bed
 from pycbio.tsv import TsvReader
 from cenSat.bedColors import getHg38UcscChromColor
@@ -137,7 +135,7 @@ def main(args):
     else:
         coordsChains = [[c] for c in coords]
     for coordsChain in coordsChains:
-        coordToBed(coordsChain, chromAliases).write(outBed)
+        coordToBed(coordsChain, chromAliases).write(args.outBed)
     args.outBed.close()
 
 main(parseArgs())

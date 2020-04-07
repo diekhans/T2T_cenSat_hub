@@ -4,7 +4,6 @@ import argparse
 import sys
 import os.path as osp
 import re
-from pycbio.sys.color import Color
 from pycbio.hgdata.bed import BedReader
 
 

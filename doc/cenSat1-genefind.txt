@@ -8,7 +8,8 @@ all paths are relative to this unless other noted.
 ################################################################################
 # 2020-03-31 markd Build cenSat1 2bit with non-centromere and HOR arrays masked
 
-# get mask out regions outside of centromere and HOR arrays
+# get mask out regions outside of centromere and HOR arrays, create both software and hard
+# mask versions
 
   bigBedToBed ../../hub/cenSat1/centroRegions.bigBed tmp/centroRegions.bed
   bedtools complement -g ../../hub/cenSat1/cenSat1.sizes -i tmp/centroRegions.bed > tmp/not-centroRegions.bed
@@ -20,4 +21,30 @@ all paths are relative to this unless other noted.
   twoBitToFa data/cenSat1.hor-mask.2bit tmp/check.fa
   faSize tmp/check.fa
   %98.39 masked total, %98.39 masked real
-  ################################################################################
+#################################################################################
+# 2020-04-06 encodeRnaSeq1 alignments of RNA-Seq to mask centromeres
+
+# from encode, select
+  - polyA plus RNA-Seq
+  - released
+  - Human
+  - testis, brain
+  - fastq files
+  - paired-end
+  resulting in 13 experiments
+
+  cd tmp/rnaseq/data
+  parallel curl -O -L < ~/tmp/files.txt >&log&
+  mv *type=Experiment* metadata.tsv
+
+  # generate index
+  nice STAR --runMode genomeGenerate --runThreadN 32 --genomeFastaFiles cenSat1.hor-mask.fa --genomeDir star
+  # empty annotations
+  touch  ../../data/star/geneInfo.tab
+  
+  # each node has 16 cores and 256gb of memory, use 8 cores per job, 128gb mem
+
+../../../../../T2T_cenSat_hub/bin/genEncodeAlnJobs data/metadata.tsv ../../data/star data results jobs.para
+
+../../../../../T2T_cenSat_hub/bin/runEncodeAlign  results/ENCFF000IMC.bam ../../data/star data/ENCFF000IMC.fastq.gz data/ENCFF000IMS.fastq.gz
+#################################################################################
