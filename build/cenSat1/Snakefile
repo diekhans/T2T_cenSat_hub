@@ -59,11 +59,13 @@ hg38CenSat1BigBed = osp.join(asmHubDir, "hg38CenSat1.bigBed")
 cenSat1Hg38BigBed = osp.join(asmHubDir, "cenSat1Hg38.bigBed")
 decompositionBigBed = osp.join(asmHubDir, "decomposition.bigBed")
 rawMethCallsBigWig = osp.join(asmHubDir, "rawMethCalls.bigWig")
+hsat10kCapBigBed = osp.join(asmHubDir, "hsat10kCap.bigBed")
+hsatThreshold10kCapBigBed = osp.join(asmHubDir, "hsatThreshold10kCap.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
               sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed,
-              decompositionBigBed] + hubOutFiles
+              decompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed] + hubOutFiles
 # BROKEN: rawMethCallsBigWig
 
 ##
@@ -88,10 +90,15 @@ bigKeepTmp = False
 def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
     if isinstance(inBeds, str):
         inBeds = [inBeds]
+    elif isinstance(inBeds, set):
+        inBeds = list(inBeds)
     with tempfile.NamedTemporaryFile(delete=not bigKeepTmp) as bedFh:
         # discard non-cenSat contigs
-        cmd = [["selectById", 1, asmSeqs, 1] + inBeds,
-               bedSortCmd]
+        if str(inBeds[0]).endswith(".gz"):
+            cmd = [["zcat"] + inBeds]
+        else:
+            cmd = [["zcat"] + inBeds]
+        cmd += [["selectById", 1, asmSeqs, 1], bedSortCmd]
         if filterCmd is not None:
             cmd.append(filterCmd)
         pipettor.run(cmd, stdout=bedFh.name)
@@ -260,3 +267,19 @@ rule rawMethCalls:
         # badly broken
         # had error: chromosome tig00001118 has 126714748 bases, but item ends at 126714756, so clip
         buildBigWig(rawMethCallsWigs, rawMethCallsBigWig, clip=True)
+
+##
+# HSAT annotation
+rule hsat10kCap:
+    input: osp.join(asmDataDir, "hsat-annotation/HSat23_BrowserTrack_v1_10kCap.bed.gz")
+    output: hsat10kCapBigBed
+    run:
+        buildBigBed({input}, hsat10kCapBigBed, bedType="bed9",
+                    filterCmd=["fixBedScore"])
+
+rule hsatThreshold10kCap:
+    input: osp.join(asmDataDir, "hsat-annotation/HSat23_BrowserTrack_v1_threshold_10kCap.bed.gz")
+    output: hsatThreshold10kCapBigBed
+    run:
+        buildBigBed({input}, hsatThreshold10kCapBigBed, bedType="bed9",
+                    filterCmd=["fixBedScore"])

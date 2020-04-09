@@ -107,12 +107,35 @@ bigDataUrl decomposition.bigBed
 priority 18
 group annotation
 
-track rawMethCalls
-shortLabel Raw meth
-longLabel Raw methylation calls
-type bigWig
+track hsat10kCap
+shortLabel HSat23
+longLabel HSat23 10kCap
+html rmsk
+type bigBed 9
+itemRgb on
 visibility hide
-bigDataUrl rawMethCalls.bigWig
+bigDataUrl hsat10kCap.bigBed
 priority 19
 group annotation
+
+track hsatThreshold10kCap
+shortLabel HSat23 Threshold
+longLabel HSat23 Threshold 10kCap
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl hsatThreshold10kCap.bigBed
+priority 20
+group annotation
+
+
+
+# track rawMethCalls
+# shortLabel Raw meth
+# longLabel Raw methylation calls
+# type bigWig
+# visibility hide
+# bigDataUrl rawMethCalls.bigWig
+# priority 19
+# group annotation
 
