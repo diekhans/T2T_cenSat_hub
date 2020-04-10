@@ -128,6 +128,16 @@ bigDataUrl hsatThreshold10kCap.bigBed
 priority 20
 group annotation
 
+track asHorAnn
+shortLabel AS HOR
+longLabel AS HOR Annotation
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl asHorAnn.bigBed
+priority 21
+group annotation
+
 
 
 # track rawMethCalls

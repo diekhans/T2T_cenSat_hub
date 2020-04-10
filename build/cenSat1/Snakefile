@@ -61,11 +61,13 @@ decompositionBigBed = osp.join(asmHubDir, "decomposition.bigBed")
 rawMethCallsBigWig = osp.join(asmHubDir, "rawMethCalls.bigWig")
 hsat10kCapBigBed = osp.join(asmHubDir, "hsat10kCap.bigBed")
 hsatThreshold10kCapBigBed = osp.join(asmHubDir, "hsatThreshold10kCap.bigBed")
+asHorAnnBigBed = osp.join(asmHubDir, "asHorAnn.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
               sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed,
-              decompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed] + hubOutFiles
+              decompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed,
+              asHorAnnBigBed] + hubOutFiles
 # BROKEN: rawMethCallsBigWig
 
 ##
@@ -97,7 +99,7 @@ def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
         if str(inBeds[0]).endswith(".gz"):
             cmd = [["zcat"] + inBeds]
         else:
-            cmd = [["zcat"] + inBeds]
+            cmd = [["cat"] + inBeds]
         cmd += [["selectById", 1, asmSeqs, 1], bedSortCmd]
         if filterCmd is not None:
             cmd.append(filterCmd)
@@ -120,6 +122,7 @@ def buildBigWig(inWigs, outBigWig, *, clip=False):
 
 rule all:
     input: allResults
+    shell: "hubCheck https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt"
 
 rule clean:
     run:
@@ -282,4 +285,12 @@ rule hsatThreshold10kCap:
     output: hsatThreshold10kCapBigBed
     run:
         buildBigBed({input}, hsatThreshold10kCapBigBed, bedType="bed9",
+                    filterCmd=["fixBedScore"])
+
+# AS HOR annotation
+rule asHorAnn:
+    input: osp.join(phase1SrcDir, "AS_HOR_ann_of_censat_CHM13_HiCanu_HiFi_20k.bed")
+    output: asHorAnnBigBed
+    run:
+        buildBigBed({input}, asHorAnnBigBed, bedType="bed9",
                     filterCmd=["fixBedScore"])
