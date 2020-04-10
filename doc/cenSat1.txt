@@ -104,7 +104,7 @@ KB: Can we do liftOver to hicanu tigs from hg38?
 ################################################################################
 # 2020-04-09 rebuild browser with more contigs
 
-new list in browser/hiCanu_ALR_HSat23.txt
+new list in phase1/browser/hiCanu_ALR_HSat23.txt
 
 ################################################################################
 todo:

@@ -39,7 +39,7 @@ group annotation
 track horArray
 shortLabel HOR Array
 longLabel HOR Array
-color 100,100,10
+color 220,20,60
 type bigBed
 visibility hide
 bigDataUrl horArray.bigBed
@@ -136,6 +136,16 @@ itemRgb on
 visibility hide
 bigDataUrl asHorAnn.bigBed
 priority 21
+group annotation
+
+track hordeComposition
+shortLabel Horde Composition
+longLabel Horde Composition
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl hordeComposition.bigBed
+priority 22
 group annotation
 
 

@@ -9,7 +9,10 @@ import pipettor
 asmName = "cenSat1"
 os.environ["PATH"] = "../../bin:" + os.environ["PATH"]
 
-# must create cenSat1.seqs with the list of contigs
+##
+# IMPORTANT
+# must create hub/cenSat1/cenSat1.seqs with the list of contigs
+##
 
 resultsDir = "/nanopore/markd/t2t-centromere/T2T_cenSat"
 
@@ -62,12 +65,13 @@ rawMethCallsBigWig = osp.join(asmHubDir, "rawMethCalls.bigWig")
 hsat10kCapBigBed = osp.join(asmHubDir, "hsat10kCap.bigBed")
 hsatThreshold10kCapBigBed = osp.join(asmHubDir, "hsatThreshold10kCap.bigBed")
 asHorAnnBigBed = osp.join(asmHubDir, "asHorAnn.bigBed")
+hordeCompositionBigBed = osp.join(asmHubDir, "hordeComposition.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
               sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed,
               decompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed,
-              asHorAnnBigBed] + hubOutFiles
+              asHorAnnBigBed, hordeCompositionBigBed] + hubOutFiles
 # BROKEN: rawMethCallsBigWig
 
 ##
@@ -89,11 +93,26 @@ bigKeepTmp = False
 ##
 # functions to do common stuff
 ##
+def inputToLst(inSpec):
+    if isinstance(inSpec, str):
+        return [inSpec]
+    elif isinstance(inSpec, set):
+        if isinstance(next(iter(inSpec)), list):
+            # set of lists
+            specs = []
+            for l in inSpec:
+                specs += l
+            return specs
+        else:
+            return list(inSpec)
+    elif isinstance(inSpec, (list, tuple)):
+        return inSpec
+    else:
+        raise Exception("Don't know how to make input into a list: {}: {}".format(type(inSpec), inSpec))
+
+
 def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
-    if isinstance(inBeds, str):
-        inBeds = [inBeds]
-    elif isinstance(inBeds, set):
-        inBeds = list(inBeds)
+    inBeds = inputToLst(inBeds)
     with tempfile.NamedTemporaryFile(delete=not bigKeepTmp) as bedFh:
         # discard non-cenSat contigs
         if str(inBeds[0]).endswith(".gz"):
@@ -171,8 +190,15 @@ rule centroRegionsTrack:
 # repeat masker
 ##
 rmskDir = osp.join(asmSrcDir, "rm")
-rmskOutFiles = [glob.glob(osp.join(rmskDir, tig + ".out/*.fasta.out"))[0]
-                for tig in contigs]
+rmskOutFiles = []
+for tig in contigs:
+    pat = osp.join(rmskDir, tig + ".out/*.fasta.out")
+    touts = glob.glob(pat)
+    if len(touts) == 0:
+        pass
+        #print("WARNING: no repeats for", tig, file=sys.stderr)
+    rmskOutFiles.extend(touts)
+
 rule rmsk:
     input: rmskOutFiles, asmSeqs
     output: rmskBigBed
@@ -247,7 +273,7 @@ rule cenSat1Hg38Align:
     run:
         with tempfile.NamedTemporaryFile() as bedFh:
             pipettor.run([[showCoords, "-T", tigHg38Delta],
-                          [nucmerToBed, "--chromAliasTsv=" + hg38ChromAlias, "seq2"]], stdout=bedFh.name)
+                          ["nucmerToBed", "--chromAliasTsv=" + hg38ChromAlias, "seq2"]], stdout=bedFh.name)
             buildBigBed(bedFh.name, cenSat1Hg38BigBed, bedType="bed12")
 
 ##
@@ -289,8 +315,15 @@ rule hsatThreshold10kCap:
 
 # AS HOR annotation
 rule asHorAnn:
-    input: osp.join(phase1SrcDir, "AS_HOR_ann_of_censat_CHM13_HiCanu_HiFi_20k.bed")
+    input: osp.join(phase1SrcDir, "chm13.draft_v0.7-vs-AS-HORs-hmmer3.0-22042018.hmm-tbl.bed.gz")
     output: asHorAnnBigBed
     run:
         buildBigBed({input}, asHorAnnBigBed, bedType="bed9",
                     filterCmd=["fixBedScore"])
+
+# hordeComposition
+rule hordeComposition:
+    input: glob.glob(osp.join(phase1SrcDir, "hordecomposition_cen*.bed"))
+    output: hordeCompositionBigBed
+    run:
+        buildBigBed({input}, hordeCompositionBigBed, bedType="bed9")
