@@ -48,8 +48,8 @@ def loadMetadata(mdTsv):
 
 def mkJobCmd(fastqGrp, genomeDir, fastqDir, bamDir):
     fq1 = fastqGrp[0]
-    cmd = [osp.join(myBinDir, "runEncodeAlign"),
-           "{{check out exist {}}}".format(osp.join(bamDir, fq1.File_accession + ".bam")),
+    cmd = [osp.join(myBinDir, "encodeAlignJob"),
+           "{{check out exists {}}}".format(osp.join(bamDir, fq1.File_accession + ".bam")),
            genomeDir,
            osp.join(fastqDir, fq1.File_accession + ".fastq.gz")]
     if len(fastqGrp) > 1:

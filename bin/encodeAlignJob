@@ -1,0 +1,7 @@
+#!/usr/bin/bash -e
+# ensure path is set, etc
+source ${HOME}/.bashrc
+
+binDir=$(dirname $(which $0))
+
+exec $binDir/runEncodeAlign "$@"

@@ -33,8 +33,11 @@ all paths are relative to this unless other noted.
     U count: mean 1536191.3 sd 1369462.5
     L count: mean 93760499.1 sd 62662115.5
     %98.39 masked total, %98.39 masked real
+
+# DROPPED< DECIDE TO USER MORE CONTIGS
+
 #################################################################################
-# 2020-04-06 encodeRnaSeq1 alignments of RNA-Seq to mask centromeres
+# 2020-04-06 encodeRnaSeq data seq 1 download
 
 # from encode, select
   - polyA plus RNA-Seq
@@ -49,14 +52,35 @@ all paths are relative to this unless other noted.
   parallel curl -O -L < ~/tmp/files.txt >&log&
   mv *type=Experiment* metadata.tsv
 
+#################################################################################
+# first alignment attempt
+# use hardmask genomes to attempt to force alignments on the euchromatic regions
+
   # generate index
-  nice STAR --runMode genomeGenerate --runThreadN 32 --genomeFastaFiles cenSat1.hor-mask.fa --genomeDir star
-  # empty annotations
-  touch  ../../data/star/geneInfo.tab
+  cd data
+  mkdir -p tmp-hard star-hardmask
+  nice STAR --runMode genomeGenerate --runThreadN 32 --genomeFastaFiles cenSat1.hor-hardmask.fa --genomeDir star-hardmask --outFileNamePrefix tmp-hard/out_
   
   # each node has 16 cores and 256gb of memory, use 8 cores per job, 128gb mem
 
-../../../../../T2T_cenSat_hub/bin/genEncodeAlnJobs data/metadata.tsv ../../data/star data results jobs.para
+../../../../../T2T_cenSat_hub/bin/genEncodeAlnJobs data/metadata.tsv ../../data/star-hardmask data results jobs.para
 
-../../../../../T2T_cenSat_hub/bin/runEncodeAlign  results/ENCFF000IMC.bam ../../data/star data/ENCFF000IMC.fastq.gz data/ENCFF000IMS.fastq.gz
+# test one
+(time nice ../../../../../T2T_cenSat_hub/bin/runEncodeAlign results/ENCFF138HQU.bam ../../data/star-hardmask data/ENCFF138HQU.fastq.gz data/ENCFF822LCB.fastq.gz)>&log
+
+
+para create -ram=128g -batch=b1  jobs.para 
+para push -ram=128g -batch=b1
+
+http://broadinstitute.github.io/picard/explain-flags.html
+samtools view -b -F 4 file.bam > mapped.bam
+
+3 = read paired (0x1) + read mapped in proper pair (0x2)
+samtools view -b -f 3 file.bam > paired-mapped.bam
+
+#################################################################################
+# 2020-04-10
+- Karen suggest expanding the search beyond centromere regions
+see meeting notes
+
 #################################################################################
