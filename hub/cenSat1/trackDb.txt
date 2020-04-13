@@ -128,6 +128,16 @@ bigDataUrl hsatThreshold10kCap.bigBed
 priority 20
 group annotation
 
+track hsatThreshold10kOriCap
+shortLabel HSat23 Orientation
+longLabel HSat23 Threshold 10kCap Orientation
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl hsatThreshold10kCapOri.bigBed
+priority 20.1
+group annotation
+
 track asHorAnn
 shortLabel AS HOR
 longLabel AS HOR Annotation
