@@ -60,6 +60,7 @@ track allGenomeSF
 shortLabel All-genome SF
 longLabel All-genome Suprachromosomal families
 type bigBed 9
+maxItems 100000
 itemRgb on
 visibility hide
 bigDataUrl allGenomeSF.bigBed
@@ -72,6 +73,7 @@ longLabel Suprachromosomal families 1 HOR
 color 90,30,100
 type bigBed 9
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl sf1Hor.bigBed
 priority 15
@@ -92,6 +94,7 @@ shortLabel GRCh38 alignments
 longLabel GRCh38 nucmer alignments
 type bigBed 12
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl hg38CenSat1.bigBed
 priority 17
@@ -102,6 +105,7 @@ shortLabel Decomposition
 longLabel Decomposition
 type bigBed 9
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl decomposition.bigBed
 priority 18
@@ -113,6 +117,7 @@ longLabel HSat23 10kCap
 html rmsk
 type bigBed 9
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl hsat10kCap.bigBed
 priority 19
@@ -123,6 +128,7 @@ shortLabel HSat23 Threshold
 longLabel HSat23 Threshold 10kCap
 type bigBed 9
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl hsatThreshold10kCap.bigBed
 priority 20
@@ -133,16 +139,18 @@ shortLabel HSat23 Orientation
 longLabel HSat23 Threshold 10kCap Orientation
 type bigBed 9
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl hsatThreshold10kCapOri.bigBed
 priority 20.1
 group annotation
 
 track asHorAnn
-shortLabel AS HOR
-longLabel AS HOR Annotation
+shortLabel AS Annotation
+longLabel AS Annotation
 type bigBed 9
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl asHorAnn.bigBed
 priority 21
@@ -153,6 +161,7 @@ shortLabel Horde Composition
 longLabel Horde Composition
 type bigBed 9
 itemRgb on
+maxItems 100000
 visibility hide
 bigDataUrl hordeComposition.bigBed
 priority 22

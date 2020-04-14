@@ -129,6 +129,13 @@ new list in phase1/browser/hiCanu_ALR_HSat23.txt
     https://hgwdev.gi.ucsc.edu/~markd/t2t/chm13_hicanu_hifi_20k.repeatmasker-small.tar.gz
 
 ################################################################################
+2020-04-14 blat server
+On blatx
+Starting trans gfServer for cenSat1 on port 17876
+Starting untrans gfServer for cenSat1 on port 17877
+################################################################################
+
+################################################################################
 todo:
 ################################################################################
 debug

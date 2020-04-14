@@ -7,4 +7,5 @@ organism Homo sapiens
 defaultPos tig00001118:34285393-37807869
 scientificName Homo sapiens
 htmlPath cenSat1/description.html
-
+blat blatx.soe.ucsc.edu 17877
+transBlat blatx.soe.ucsc.edu 17876
