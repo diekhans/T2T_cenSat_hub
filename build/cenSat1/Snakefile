@@ -66,6 +66,7 @@ hsat10kCapBigBed = osp.join(asmHubDir, "hsat10kCap.bigBed")
 hsatThreshold10kCapBigBed = osp.join(asmHubDir, "hsatThreshold10kCap.bigBed")
 hsatThreshold10kCapOriBigBed = osp.join(asmHubDir, "hsatThreshold10kCapOri.bigBed")
 asHorAnnBigBed = osp.join(asmHubDir, "asHorAnn.bigBed")
+asHorAnnOriBigBed = osp.join(asmHubDir, "asHorOriAnn.bigBed")
 hordeCompositionBigBed = osp.join(asmHubDir, "hordeComposition.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
@@ -73,7 +74,8 @@ allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed,
               decompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed,
               hsatThreshold10kCapOriBigBed,
-              asHorAnnBigBed, hordeCompositionBigBed] + hubOutFiles
+              asHorAnnBigBed, asHorAnnOriBigBed,
+              hordeCompositionBigBed] + hubOutFiles
 # BROKEN: rawMethCallsBigWig
 
 ##
@@ -328,6 +330,13 @@ rule asHorAnn:
     output: asHorAnnBigBed
     run:
         buildBigBed({input}, asHorAnnBigBed, bedType="bed9",
+                    filterCmd=["fixBedScore"])
+
+rule asHorAnnOri:
+    input: osp.join(phase1SrcDir, "chm13_hicanu_hifi_20k-vs-AS-HORs-hmmer3.0-22042018.hmm-tbl.ori.bed")
+    output: asHorAnnOriBigBed
+    run:
+        buildBigBed({input}, asHorAnnOriBigBed, bedType="bed9",
                     filterCmd=["fixBedScore"])
 
 # hordeComposition

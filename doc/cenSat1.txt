@@ -142,3 +142,6 @@ todo:
 ################################################################################
 debug
 /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/tig*_raw_meth_calls.wig
+
+Also: I am seeing regions that do not have repeat masker data (but do have
+annotated alpha satellite, for example: tig00005722:1-25,845)

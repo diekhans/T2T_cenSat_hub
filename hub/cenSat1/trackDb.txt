@@ -156,6 +156,17 @@ bigDataUrl asHorAnn.bigBed
 priority 21
 group annotation
 
+track asHorAnnOri
+shortLabel AS Ann Orientation
+longLabel AS Annotation Orientation
+type bigBed 9
+itemRgb on
+maxItems 100000
+visibility hide
+bigDataUrl asHorOriAnn.bigBed
+priority 21.1
+group annotation
+
 track hordeComposition
 shortLabel Horde Composition
 longLabel Horde Composition
