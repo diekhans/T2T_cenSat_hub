@@ -1,0 +1,38 @@
+#!/usr/bin/bash -e
+# ensure path is set, etc
+source ${HOME}/.bashrc
+set -beEu -o pipefail
+
+binDir=$(dirname $(which $0))
+
+if [ $# != 4 ] ; then
+    echo "wrong # args $0 genomePrefix bam intronsBigBed juncsBigBed" >&2
+    exit 1
+fi
+genomePrefix="$1"
+bam="$2"
+intronsBigBed="$3"
+juncsBigBed="$4"
+
+genomeFa=${genomePrefix}.fa
+genomeSizes=${genomePrefix}.sizes
+TMPDIR=${TMPDIR:-.}
+tmpName=$(hostname).$$
+tmpPrefix=${TMPDIR}/callIntrons.${tmpName}
+
+tmpIntronsBed=${tmpPrefix}.introns.bed
+tmpJuncsBed=${tmpPrefix}.juncs.bed
+
+intronProspector -D dbg.out --min-confidence-score=1.0 -g ${genomeFa} -j ${tmpJuncsBed} -n ${tmpIntronsBed} ${bam}
+
+intronsBigBedTmp=${intronsBigBed}.${tmpName}.tmp
+juncsBigBedTmp=${juncsBigBed}.${tmpName}.tmp
+
+mkdir -p $(dirname ${intronsBigBed})
+mkdir -p $(dirname ${juncsBigBed})
+
+bedToBigBed -type=bed9 -tab ${tmpIntronsBed} ${genomeSizes} ${intronsBigBedTmp}
+bedToBigBed -type=bed12 -tab ${tmpJuncsBed} ${genomeSizes} ${juncsBigBedTmp}
+
+mv -f ${intronsBigBedTmp} ${intronsBigBed}
+mv -f ${juncsBigBedTmp} ${juncsBigBed}

@@ -12,6 +12,8 @@ from pycbio.sys import fileOps
 def parseArgs():
     usage = """run an START alignment ENCODE RNA-Seq """
     parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('ncpus', type=int)
+    parser.add_argument('ramGB', type=int)
     parser.add_argument('bamFile',
                         help="bamFile")
     parser.add_argument('genomeDir',
@@ -21,13 +23,14 @@ def parseArgs():
     parser.add_argument('fastq2', nargs='?',
                         help="FASTQ 2")
     args = parser.parse_args()
-    args.ramGB = 128
-    args.ncpus = 8
     return args
+
+multiMapMax = 2048
 
 # from https://raw.githubusercontent.com/ENCODE-DCC/rna-seq-pipeline/master/src/align.py
 #  removed: --quantMode TranscriptomeSAM \
 #  added: outFileNamePrefix
+#  change --outFilterMultimapNmax
 #  check status of command
 class StarAligner(ABC):
     """
@@ -62,7 +65,7 @@ class SingleEndedStarAligner(StarAligner):
     --readFilesCommand zcat \
     --runThreadN {ncpus} \
     --genomeLoad NoSharedMemory \
-    --outFilterMultimapNmax 20 \
+    --outFilterMultimapNmax {multiMapMax} \
     --alignSJoverhangMin 8 \
     --alignSJDBoverhangMin 1 \
     --outFilterMismatchNmax 999 \
@@ -94,7 +97,8 @@ class SingleEndedStarAligner(StarAligner):
             ncpus=self.ncpus,
             ramGB=self.ramGB,
             indexdir=self.indexdir,
-            outFileNamePrefix=self.outFileNamePrefix
+            outFileNamePrefix=self.outFileNamePrefix,
+            multiMapMax=multiMapMax,
         )
         return cmd
 
@@ -106,7 +110,7 @@ class PairedEndStarAligner(StarAligner):
     --readFilesCommand zcat \
     --runThreadN {ncpus} \
     --genomeLoad NoSharedMemory \
-    --outFilterMultimapNmax 20 \
+    --outFilterMultimapNmax {multiMapMax} \
     --alignSJoverhangMin 8 \
     --alignSJDBoverhangMin 1 \
     --outFilterMismatchNmax 999 \
@@ -139,7 +143,8 @@ class PairedEndStarAligner(StarAligner):
             ncpus=self.ncpus,
             ramGB=self.ramGB,
             indexdir=self.indexdir,
-            outFileNamePrefix=self.outFileNamePrefix
+            outFileNamePrefix=self.outFileNamePrefix,
+            multiMapMax=multiMapMax
         )
         return cmd
 
@@ -147,7 +152,12 @@ def main(args):
     if osp.exists(args.bamFile):
         print("NOTE: BAM already exists, skipping:", args.bamFile, file=sys.stderr)
         return
-    alignerCls = SingleEndedStarAligner if args.fastq2 is None else PairedEndStarAligner
+    if args.fastq2 is None:
+        alignerCls = SingleEndedStarAligner
+        filtCmd = ["samtools", "view", "-b", "-F", "4"]
+    else:
+        alignerCls = PairedEndStarAligner
+        filtCmd = ["samtools", "view", "-b", "-f", "3"]
 
     tmpDir = fileOps.tmpDirGet(prefix="star")
     aligner = alignerCls([args.fastq1, args.fastq2],
@@ -158,7 +168,9 @@ def main(args):
 
     fileOps.ensureFileDir(args.bamFile)
     with fileOps.AtomicFileCreate(args.bamFile) as tmpBam:
-        shutil.copyfile(osp.join(tmpDir, "out_Aligned.sortedByCoord.out.bam"), tmpBam)
+        with open(tmpBam, "wb") as tmpBamFh:
+            subprocess.check_call(filtCmd + [osp.join(tmpDir, "out_Aligned.sortedByCoord.out.bam")],
+                                  stdout=tmpBamFh)
     fileOps.rmTree(tmpDir)
 
 main(parseArgs())

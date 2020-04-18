@@ -37,7 +37,7 @@ all paths are relative to this unless other noted.
 # DROPPED< DECIDE TO USER MORE CONTIGS
 
 #################################################################################
-# 2020-04-06 encodeRnaSeq data seq 1 download
+# 2020-04-06 encodeRnaSeq set 1 download
 
 # from encode, select
   - polyA plus RNA-Seq
@@ -48,7 +48,7 @@ all paths are relative to this unless other noted.
   - paired-end
   resulting in 13 experiments
 
-  cd tmp/rnaseq/data
+  cd genefind/cenSat1/encodeRnaSeq1/data
   parallel curl -O -L < ~/tmp/files.txt >&log&
   mv *type=Experiment* metadata.tsv
 
@@ -58,10 +58,9 @@ all paths are relative to this unless other noted.
 
   # generate index
   cd data
-  mkdir -p tmp-hard star-hardmask
-  nice STAR --runMode genomeGenerate --runThreadN 32 --genomeFastaFiles cenSat1.hor-hardmask.fa --genomeDir star-hardmask --outFileNamePrefix tmp-hard/out_
+  nice STAR --runMode genomeGenerate --runThreadN 32 --genomeFastaFiles cenSat1.hor-hardmask.fa --genomeDir star --outFileNamePrefix tmp-hard/out_
   
-  # each node has 16 cores and 256gb of memory, use 8 cores per job, 128gb mem
+  # each node has 32 cores and 256gb of memory, 
 
 ../../../../../T2T_cenSat_hub/bin/genEncodeAlnJobs data/metadata.tsv ../../data/star-hardmask data results jobs.para
 
@@ -77,10 +76,60 @@ samtools view -b -F 4 file.bam > mapped.bam
 
 3 = read paired (0x1) + read mapped in proper pair (0x2)
 samtools view -b -f 3 file.bam > paired-mapped.bam
+# OLD DELOETE
+
 
 #################################################################################
-# 2020-04-10
-- Karen suggest expanding the search beyond centromere regions
-see meeting notes
+# 2020-04-12 encodeRnaSeq set1 alignments
+Align encode set to new set of contigs.  Keep lots of hits (2049) and filter later
+
+   cd genefind/cenSat1/encodeRnaSeq1
+   twoBitToFa ../../../hub/cenSat1/cenSat1.2bit tigs/cenSat1.fa
+   twoBitInfo ../../../hub/cenSat1/cenSat1.2bit tigs/cenSat1.sizes
+   mkdir tigs/star
+   nice STAR --runMode genomeGenerate --runThreadN 32 --genomeFastaFiles tigs/cenSat1.fa --genomeDir tigs/star --outFileNamePrefix tigs/star/out
+   samtools faidx tigs/cenSat1.fa
+
+  # each node has 32 cores and 256gb of memory, use 4 cores per job, 64gb mem
+  ../../../../T2T_cenSat_hub/bin/genEncodeAlnJobs 4 64 data/metadata.tsv data tigs/star bams jobs.para
+
+  para create -ram=64g -batch=b1  jobs.para 
+  para push -ram=64g -batch=b1
+  Average job time:               16336s     272.27m     4.54h    0.19d
+  Longest finished job:           33036s     550.60m     9.18h    0.38d
+  # note: looks like 16gb might do
+
+# combined
+(nice samtools cat bams/ENCFF*.bam | nice samtools sort -O BAM --threads 32 >bams/encodeRnaSeq1.bam)>&cat.log&
+
+# generate intron calls
+
+#LOOP
+../../../../T2T_cenSat_hub/bin/callIntronsJob tigs/cenSat1 $(path1) introns/$(root1).introns.bigBed {check out exists introns/$(root1).juncs.bigBed}
+#ENDLOOP
+gensub2 <(find bams -name '*.bam') <(echo 1) introns.tmpl introns.jobs
+for f in bams/*.bam ; do (samtools index $f &); done
+
+#################################################################################
+# proseq
+
+ sync /public/groups/nanopore/karen/chm13/cenSat_WG/transcription/SKlein_PROSeq_forCollab_05Dec2019-145360224
+ to data
+ edit list of FASTQs to generate commands in the form
+  ../../../../T2T_cenSat_hub/bin/encodeAlignJob 4 64 {check out exists bams/$NAME.bam} ../encodeRnaSeq1/tigs/star data/${FASTQ}
+  para create -ram=64g -batch=b1  jobs.para 
+  para push -ram=64g -batch=b1
+
+  # note: looks like 16gb might do
+(nice samtools cat bams/CHM13*.bam | nice samtools sort -T${TMPDIR}/proSeq. -O BAM --threads 32 >bams/proSeq.bam)>&cat.log&
+
+# generate intron calls
+
+#LOOP
+../../../../T2T_cenSat_hub/bin/callIntronsJob ../encodeRnaSeq1/tigs/cenSat1 $(path1) introns/$(root1).introns.bigBed {check out exists introns/$(root1).juncs.bigBed}
+#ENDLOOP
+gensub2 <(find bams -name '*.bam') <(echo 1) introns.tmpl introns.jobs
+
+for f in bams/*.bam ; do (samtools index $f &); done
 
 #################################################################################
