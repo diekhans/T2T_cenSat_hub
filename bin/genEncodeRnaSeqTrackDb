@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+# very hacked program to generate trackDb files Encode RNA-Seq alignments and introns
+
+from common import TrackDbRnaSeqWriter
+
+superTrackTmpl = """\
+track encodeRnaSeq
+shortLabel Encode RNA-Seq
+longLabel Encode RNA-Seq expression
+superTrack on show
+visibility hide
+group expression
+
+"""
+
+trackSetTmpl = """\
+track encodeRnaSeqAln{track}
+parent encodeRnaSeq
+shortLabel {name} Alns
+longLabel {name} Alignments
+priority {pri}.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/{track}.bam
+
+track encodeRnaSeqIntron{track}
+parent encodeRnaSeq
+shortLabel {name} Introns
+longLabel {name} Introns
+itemRgb on
+priority {pri}.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/{track}.introns.bigBed
+
+track encodeRnaSeq{track}
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority {pri}.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/{track}.juncs.bigBed
+
+"""
+
+trackSpecs = (
+    ("encodeRnaSeq1", "Combined ENCODE"),
+    ("ENCFF000IMA", ),
+    ("ENCFF000IMC", ),
+    ("ENCFF000INM", ),
+    ("ENCFF000INN", ),
+    ("ENCFF000IOD", ),
+    ("ENCFF000IOP", ),
+    ("ENCFF000IQQ", ),
+    ("ENCFF000IQR", ),
+    ("ENCFF016TGP", ),
+    ("ENCFF034BHU", ),
+    ("ENCFF138HQU", ),
+    ("ENCFF456MMS", ),
+    ("ENCFF482SFO", ),
+    ("ENCFF850ZLY", ),
+    ("ENCFF960DLP", ),
+    ("ENCFF993CAL", ),
+)
+
+
+def main():
+    writer = TrackDbRnaSeqWriter(superTrackTmpl, trackSetTmpl)
+    with open("encodeRnaSeq.trackDb.txt", "w") as fh:
+        writer.writeTrackDb(trackSpecs, fh)
+
+main()

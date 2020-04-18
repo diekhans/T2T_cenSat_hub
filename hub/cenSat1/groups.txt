@@ -12,3 +12,8 @@ name annotation
 label Annotation
 priority 3
 defaultIsClosed 0
+
+name expression
+label Expression
+priority 4
+defaultIsClosed 0

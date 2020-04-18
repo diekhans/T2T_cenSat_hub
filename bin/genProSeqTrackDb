@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+# very hacked program to generate trackDb files ProSeq alignments and introns
+
+from common import TrackDbRnaSeqWriter
+
+superTrackTmpl = """\
+track proSeq
+shortLabel ProSeq
+longLabel ProSeq expression
+superTrack on show
+visibility hide
+group expression
+
+"""
+
+trackSetTmpl = """\
+track proSeqAln{track}
+parent proSeq
+shortLabel {name} Alns
+longLabel {name} Alignments
+priority {pri}.0
+type bam
+visibility hide
+bigDataUrl proSeq/{track}.bam
+
+track proSeqIntron{track}
+parent proSeq
+shortLabel {name} Introns
+longLabel {name} Introns
+itemRgb on
+priority {pri}.1
+type bed 9
+visibility hide
+bigDataUrl proSeq/{track}.introns.bigBed
+
+track proSeq{track}
+parent proSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority {pri}.2
+type bed 12
+visibility hide
+bigDataUrl proSeq/{track}.juncs.bigBed
+
+"""
+
+trackSpecs = (
+    ("proSeq", "Combined ProSeq"),
+    ("CHM13-5A_S1_L001_R1_001", ),
+    ("CHM13-5A_S1_L002_R1_001", ),
+    ("CHM13-5A_S1_L003_R1_001", ),
+    ("CHM13-5A_S1_L004_R1_001", ),
+    ("CHM13-5B_S2_L001_R1_001", ),
+    ("CHM13-5B_S2_L002_R1_001", ),
+    ("CHM13-5B_S2_L003_R1_001", ),
+    ("CHM13-5B_S2_L004_R1_001", ),
+)
+
+
+def main():
+    writer = TrackDbRnaSeqWriter(superTrackTmpl, trackSetTmpl)
+    with open("proSeq.trackDb.txt", "w") as fh:
+        writer.writeTrackDb(trackSpecs, fh)
+
+main()

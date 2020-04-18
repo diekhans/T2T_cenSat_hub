@@ -1,0 +1,535 @@
+track encodeRnaSeq
+shortLabel Encode RNA-Seq
+longLabel Encode RNA-Seq expression
+superTrack on show
+visibility hide
+group expression
+
+
+################################################################################
+track encodeRnaSeqAlnencodeRnaSeq1
+parent encodeRnaSeq
+shortLabel Combined ENCODE Alns
+longLabel Combined ENCODE Alignments
+priority 1.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/encodeRnaSeq1.bam
+
+track encodeRnaSeqIntronencodeRnaSeq1
+parent encodeRnaSeq
+shortLabel Combined ENCODE Introns
+longLabel Combined ENCODE Introns
+itemRgb on
+priority 1.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/encodeRnaSeq1.introns.bigBed
+
+track encodeRnaSeqencodeRnaSeq1
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 1.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/encodeRnaSeq1.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000IMA
+parent encodeRnaSeq
+shortLabel ENCFF000IMA Alns
+longLabel ENCFF000IMA Alignments
+priority 2.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IMA.bam
+
+track encodeRnaSeqIntronENCFF000IMA
+parent encodeRnaSeq
+shortLabel ENCFF000IMA Introns
+longLabel ENCFF000IMA Introns
+itemRgb on
+priority 2.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IMA.introns.bigBed
+
+track encodeRnaSeqENCFF000IMA
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 2.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IMA.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000IMC
+parent encodeRnaSeq
+shortLabel ENCFF000IMC Alns
+longLabel ENCFF000IMC Alignments
+priority 3.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IMC.bam
+
+track encodeRnaSeqIntronENCFF000IMC
+parent encodeRnaSeq
+shortLabel ENCFF000IMC Introns
+longLabel ENCFF000IMC Introns
+itemRgb on
+priority 3.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IMC.introns.bigBed
+
+track encodeRnaSeqENCFF000IMC
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 3.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IMC.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000INM
+parent encodeRnaSeq
+shortLabel ENCFF000INM Alns
+longLabel ENCFF000INM Alignments
+priority 4.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000INM.bam
+
+track encodeRnaSeqIntronENCFF000INM
+parent encodeRnaSeq
+shortLabel ENCFF000INM Introns
+longLabel ENCFF000INM Introns
+itemRgb on
+priority 4.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000INM.introns.bigBed
+
+track encodeRnaSeqENCFF000INM
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 4.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000INM.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000INN
+parent encodeRnaSeq
+shortLabel ENCFF000INN Alns
+longLabel ENCFF000INN Alignments
+priority 5.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000INN.bam
+
+track encodeRnaSeqIntronENCFF000INN
+parent encodeRnaSeq
+shortLabel ENCFF000INN Introns
+longLabel ENCFF000INN Introns
+itemRgb on
+priority 5.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000INN.introns.bigBed
+
+track encodeRnaSeqENCFF000INN
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 5.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000INN.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000IOD
+parent encodeRnaSeq
+shortLabel ENCFF000IOD Alns
+longLabel ENCFF000IOD Alignments
+priority 6.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IOD.bam
+
+track encodeRnaSeqIntronENCFF000IOD
+parent encodeRnaSeq
+shortLabel ENCFF000IOD Introns
+longLabel ENCFF000IOD Introns
+itemRgb on
+priority 6.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IOD.introns.bigBed
+
+track encodeRnaSeqENCFF000IOD
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 6.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IOD.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000IOP
+parent encodeRnaSeq
+shortLabel ENCFF000IOP Alns
+longLabel ENCFF000IOP Alignments
+priority 7.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IOP.bam
+
+track encodeRnaSeqIntronENCFF000IOP
+parent encodeRnaSeq
+shortLabel ENCFF000IOP Introns
+longLabel ENCFF000IOP Introns
+itemRgb on
+priority 7.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IOP.introns.bigBed
+
+track encodeRnaSeqENCFF000IOP
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 7.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IOP.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000IQQ
+parent encodeRnaSeq
+shortLabel ENCFF000IQQ Alns
+longLabel ENCFF000IQQ Alignments
+priority 8.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IQQ.bam
+
+track encodeRnaSeqIntronENCFF000IQQ
+parent encodeRnaSeq
+shortLabel ENCFF000IQQ Introns
+longLabel ENCFF000IQQ Introns
+itemRgb on
+priority 8.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IQQ.introns.bigBed
+
+track encodeRnaSeqENCFF000IQQ
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 8.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IQQ.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF000IQR
+parent encodeRnaSeq
+shortLabel ENCFF000IQR Alns
+longLabel ENCFF000IQR Alignments
+priority 9.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IQR.bam
+
+track encodeRnaSeqIntronENCFF000IQR
+parent encodeRnaSeq
+shortLabel ENCFF000IQR Introns
+longLabel ENCFF000IQR Introns
+itemRgb on
+priority 9.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IQR.introns.bigBed
+
+track encodeRnaSeqENCFF000IQR
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 9.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF000IQR.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF016TGP
+parent encodeRnaSeq
+shortLabel ENCFF016TGP Alns
+longLabel ENCFF016TGP Alignments
+priority 10.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF016TGP.bam
+
+track encodeRnaSeqIntronENCFF016TGP
+parent encodeRnaSeq
+shortLabel ENCFF016TGP Introns
+longLabel ENCFF016TGP Introns
+itemRgb on
+priority 10.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF016TGP.introns.bigBed
+
+track encodeRnaSeqENCFF016TGP
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 10.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF016TGP.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF034BHU
+parent encodeRnaSeq
+shortLabel ENCFF034BHU Alns
+longLabel ENCFF034BHU Alignments
+priority 11.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF034BHU.bam
+
+track encodeRnaSeqIntronENCFF034BHU
+parent encodeRnaSeq
+shortLabel ENCFF034BHU Introns
+longLabel ENCFF034BHU Introns
+itemRgb on
+priority 11.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF034BHU.introns.bigBed
+
+track encodeRnaSeqENCFF034BHU
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 11.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF034BHU.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF138HQU
+parent encodeRnaSeq
+shortLabel ENCFF138HQU Alns
+longLabel ENCFF138HQU Alignments
+priority 12.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF138HQU.bam
+
+track encodeRnaSeqIntronENCFF138HQU
+parent encodeRnaSeq
+shortLabel ENCFF138HQU Introns
+longLabel ENCFF138HQU Introns
+itemRgb on
+priority 12.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF138HQU.introns.bigBed
+
+track encodeRnaSeqENCFF138HQU
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 12.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF138HQU.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF456MMS
+parent encodeRnaSeq
+shortLabel ENCFF456MMS Alns
+longLabel ENCFF456MMS Alignments
+priority 13.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF456MMS.bam
+
+track encodeRnaSeqIntronENCFF456MMS
+parent encodeRnaSeq
+shortLabel ENCFF456MMS Introns
+longLabel ENCFF456MMS Introns
+itemRgb on
+priority 13.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF456MMS.introns.bigBed
+
+track encodeRnaSeqENCFF456MMS
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 13.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF456MMS.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF482SFO
+parent encodeRnaSeq
+shortLabel ENCFF482SFO Alns
+longLabel ENCFF482SFO Alignments
+priority 14.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF482SFO.bam
+
+track encodeRnaSeqIntronENCFF482SFO
+parent encodeRnaSeq
+shortLabel ENCFF482SFO Introns
+longLabel ENCFF482SFO Introns
+itemRgb on
+priority 14.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF482SFO.introns.bigBed
+
+track encodeRnaSeqENCFF482SFO
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 14.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF482SFO.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF850ZLY
+parent encodeRnaSeq
+shortLabel ENCFF850ZLY Alns
+longLabel ENCFF850ZLY Alignments
+priority 15.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF850ZLY.bam
+
+track encodeRnaSeqIntronENCFF850ZLY
+parent encodeRnaSeq
+shortLabel ENCFF850ZLY Introns
+longLabel ENCFF850ZLY Introns
+itemRgb on
+priority 15.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF850ZLY.introns.bigBed
+
+track encodeRnaSeqENCFF850ZLY
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 15.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF850ZLY.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF960DLP
+parent encodeRnaSeq
+shortLabel ENCFF960DLP Alns
+longLabel ENCFF960DLP Alignments
+priority 16.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF960DLP.bam
+
+track encodeRnaSeqIntronENCFF960DLP
+parent encodeRnaSeq
+shortLabel ENCFF960DLP Introns
+longLabel ENCFF960DLP Introns
+itemRgb on
+priority 16.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF960DLP.introns.bigBed
+
+track encodeRnaSeqENCFF960DLP
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 16.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF960DLP.juncs.bigBed
+
+
+################################################################################
+track encodeRnaSeqAlnENCFF993CAL
+parent encodeRnaSeq
+shortLabel ENCFF993CAL Alns
+longLabel ENCFF993CAL Alignments
+priority 17.0
+type bam
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF993CAL.bam
+
+track encodeRnaSeqIntronENCFF993CAL
+parent encodeRnaSeq
+shortLabel ENCFF993CAL Introns
+longLabel ENCFF993CAL Introns
+itemRgb on
+priority 17.1
+type bed 9
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF993CAL.introns.bigBed
+
+track encodeRnaSeqENCFF993CAL
+parent encodeRnaSeq
+shortLabel Juncs
+longLabel Junctions
+itemRgb on
+priority 17.2
+type bed 12
+visibility hide
+bigDataUrl encodeRnaSeq/ENCFF993CAL.juncs.bigBed
+
+
