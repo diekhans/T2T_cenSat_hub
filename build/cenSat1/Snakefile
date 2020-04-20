@@ -60,22 +60,22 @@ sf1HorBigBed = osp.join(asmHubDir, "sf1Hor.bigBed")
 pubMonBigBed = osp.join(asmHubDir, "pubMon.bigBed")
 hg38CenSat1BigBed = osp.join(asmHubDir, "hg38CenSat1.bigBed")
 cenSat1Hg38BigBed = osp.join(asmHubDir, "cenSat1Hg38.bigBed")
-decompositionBigBed = osp.join(asmHubDir, "decomposition.bigBed")
+monDecompositionBigBed = osp.join(asmHubDir, "monDecomposition.bigBed")
 rawMethCallsBigWig = osp.join(asmHubDir, "rawMethCalls.bigWig")
 hsat10kCapBigBed = osp.join(asmHubDir, "hsat10kCap.bigBed")
 hsatThreshold10kCapBigBed = osp.join(asmHubDir, "hsatThreshold10kCap.bigBed")
 hsatThreshold10kCapOriBigBed = osp.join(asmHubDir, "hsatThreshold10kCapOri.bigBed")
 asHorAnnBigBed = osp.join(asmHubDir, "asHorAnn.bigBed")
 asHorAnnOriBigBed = osp.join(asmHubDir, "asHorOriAnn.bigBed")
-hordeCompositionBigBed = osp.join(asmHubDir, "hordeComposition.bigBed")
+horDecompositionBigBed = osp.join(asmHubDir, "horDecomposition.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
               sf1HorBigBed, pubMonBigBed, hg38CenSat1BigBed, cenSat1Hg38BigBed,
-              decompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed,
+              monDecompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed,
               hsatThreshold10kCapOriBigBed,
               asHorAnnBigBed, asHorAnnOriBigBed,
-              hordeCompositionBigBed] + hubOutFiles
+              horDecompositionBigBed] + hubOutFiles
 # BROKEN: rawMethCallsBigWig
 
 ##
@@ -180,14 +180,12 @@ rule hubText:
 ###
 # centromere region track
 ###
-centroRegionBeds = glob.glob(osp.join(asmSrcDir, "chr*/cen*_entireALR.bed"))
+centroRegionBed = osp.join(phase1SrcDir, "T2T_cenSat_Phase1_2_Array_Annotation.cenRegions.tsv.bed")
 rule centroRegionsTrack:
-    input: centroRegionBeds, asmSizes
+    input: centroRegionBed, asmSizes
     output: centroRegionsBigBed
     run:
-        with tempfile.NamedTemporaryFile() as bedFh:
-            pipettor.run(["buildCentroRegions"] + centroRegionBeds, stdout=bedFh)
-            buildBigBed(bedFh.name, centroRegionsBigBed)
+        buildBigBed(centroRegionBed, centroRegionsBigBed, bedType="bed9")
 
 
 ##
@@ -218,12 +216,12 @@ rule rmsk:
 ##
 # HOR arrays, etc
 ##
-horArrayBed = osp.join(phase1SrcDir, "cenSat_HORarray.v1.bed")
+horArrayBed = osp.join(phase1SrcDir, "T2T_cenSat_Phase1_2_Array_Annotation.cenSat.tsv.bed")
 rule horArray:
     input: horArrayBed, asmSizes
     output: horArrayBigBed
     run:
-        buildBigBed([horArrayBed], horArrayBigBed)
+        buildBigBed(horArrayBed, horArrayBigBed, bedType="bed9")
 
 horHmmBed = osp.join(phase1SrcDir, "cenSat_HOR_hmmOut.bed")
 rule horHmm:
@@ -281,13 +279,13 @@ rule cenSat1Hg38Align:
             buildBigBed(bedFh.name, cenSat1Hg38BigBed, bedType="bed12")
 
 ##
-# decomposition
-decompBeds = list(glob.glob(osp.join(phase1SrcDir, "decomposition_cen*.bed")))
-rule decomp:
-    input: decompBeds
-    output: decompositionBigBed
+# monDecomposition
+monDecompBeds = list(glob.glob(osp.join(phase1SrcDir, "decomposition_cen*.bed")))
+rule monDecomp:
+    input: monDecompBeds
+    output: monDecompositionBigBed
     run:
-        buildBigBed(decompBeds, decompositionBigBed, bedType="bed9",
+        buildBigBed(monDecompBeds, monDecompositionBigBed, bedType="bed9",
                     filterCmd=["fixBedScore"])
 
 #
@@ -339,9 +337,9 @@ rule asHorAnnOri:
         buildBigBed({input}, asHorAnnOriBigBed, bedType="bed9",
                     filterCmd=["fixBedScore"])
 
-# hordeComposition
-rule hordeComposition:
+# horDecomposition
+rule horDecomposition:
     input: glob.glob(osp.join(phase1SrcDir, "hordecomposition_cen*.bed"))
-    output: hordeCompositionBigBed
+    output: horDecompositionBigBed
     run:
-        buildBigBed({input}, hordeCompositionBigBed, bedType="bed9")
+        buildBigBed({input}, horDecompositionBigBed, bedType="bed9")

@@ -100,14 +100,14 @@ bigDataUrl hg38CenSat1.bigBed
 priority 17
 group annotation
 
-track decomposition
-shortLabel Decomposition
-longLabel Decomposition
+track monDecomposition
+shortLabel Mon Decomposition
+longLabel Mon Decomposition
 type bigBed 9
 itemRgb on
 maxItems 100000
 visibility hide
-bigDataUrl decomposition.bigBed
+bigDataUrl monDecomposition.bigBed
 priority 18
 group annotation
 
@@ -167,14 +167,14 @@ bigDataUrl asHorOriAnn.bigBed
 priority 21.1
 group annotation
 
-track hordeComposition
-shortLabel Horde Composition
-longLabel Horde Composition
+track horDecomposition
+shortLabel HOR Decomposition
+longLabel HOR Decomposition
 type bigBed 9
 itemRgb on
 maxItems 100000
 visibility hide
-bigDataUrl hordeComposition.bigBed
+bigDataUrl horDecomposition.bigBed
 priority 22
 group annotation
 
@@ -189,3 +189,5 @@ group annotation
 # priority 19
 # group annotation
 
+include encodeRnaSeq.trackDb.txt
+include proSeq.trackDb.txt

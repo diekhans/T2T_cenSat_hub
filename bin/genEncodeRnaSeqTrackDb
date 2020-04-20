@@ -7,7 +7,7 @@ superTrackTmpl = """\
 track encodeRnaSeq
 shortLabel Encode RNA-Seq
 longLabel Encode RNA-Seq expression
-superTrack on show
+superTrack on hide
 visibility hide
 group expression
 
@@ -21,7 +21,7 @@ longLabel {name} Alignments
 priority {pri}.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/{track}.bam
+bigDataUrl encodeRnaSeq/bams/{track}.bam
 
 track encodeRnaSeqIntron{track}
 parent encodeRnaSeq
@@ -29,24 +29,24 @@ shortLabel {name} Introns
 longLabel {name} Introns
 itemRgb on
 priority {pri}.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/{track}.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/{track}.introns.bigBed
 
 track encodeRnaSeq{track}
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel {name} Juncs
+longLabel {name} Junctions
 itemRgb on
 priority {pri}.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/{track}.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/{track}.juncs.bigBed
 
 """
 
 trackSpecs = (
-    ("encodeRnaSeq1", "Combined ENCODE"),
+    ("encodeRnaSeq", "Combined ENCODE"),
     ("ENCFF000IMA", ),
     ("ENCFF000IMC", ),
     ("ENCFF000INM", ),

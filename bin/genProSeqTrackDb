@@ -7,7 +7,7 @@ superTrackTmpl = """\
 track proSeq
 shortLabel ProSeq
 longLabel ProSeq expression
-superTrack on show
+superTrack on hide
 visibility hide
 group expression
 
@@ -21,7 +21,7 @@ longLabel {name} Alignments
 priority {pri}.0
 type bam
 visibility hide
-bigDataUrl proSeq/{track}.bam
+bigDataUrl proSeq/bams/{track}.bam
 
 track proSeqIntron{track}
 parent proSeq
@@ -29,19 +29,19 @@ shortLabel {name} Introns
 longLabel {name} Introns
 itemRgb on
 priority {pri}.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/{track}.introns.bigBed
+bigDataUrl proSeq/introns/{track}.introns.bigBed
 
 track proSeq{track}
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel {name} Juncs
+longLabel {name} Junctions
 itemRgb on
 priority {pri}.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/{track}.juncs.bigBed
+bigDataUrl proSeq/introns/{track}.juncs.bigBed
 
 """
 

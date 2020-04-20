@@ -1,40 +1,40 @@
 track encodeRnaSeq
 shortLabel Encode RNA-Seq
 longLabel Encode RNA-Seq expression
-superTrack on show
+superTrack on hide
 visibility hide
 group expression
 
 
 ################################################################################
-track encodeRnaSeqAlnencodeRnaSeq1
+track encodeRnaSeqAlnencodeRnaSeq
 parent encodeRnaSeq
 shortLabel Combined ENCODE Alns
 longLabel Combined ENCODE Alignments
 priority 1.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/encodeRnaSeq1.bam
+bigDataUrl encodeRnaSeq/bams/encodeRnaSeq.bam
 
-track encodeRnaSeqIntronencodeRnaSeq1
+track encodeRnaSeqIntronencodeRnaSeq
 parent encodeRnaSeq
 shortLabel Combined ENCODE Introns
 longLabel Combined ENCODE Introns
 itemRgb on
 priority 1.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/encodeRnaSeq1.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/encodeRnaSeq.introns.bigBed
 
-track encodeRnaSeqencodeRnaSeq1
+track encodeRnaSeqencodeRnaSeq
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel Combined ENCODE Juncs
+longLabel Combined ENCODE Junctions
 itemRgb on
 priority 1.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/encodeRnaSeq1.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/encodeRnaSeq.juncs.bigBed
 
 
 ################################################################################
@@ -45,7 +45,7 @@ longLabel ENCFF000IMA Alignments
 priority 2.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IMA.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000IMA.bam
 
 track encodeRnaSeqIntronENCFF000IMA
 parent encodeRnaSeq
@@ -53,19 +53,19 @@ shortLabel ENCFF000IMA Introns
 longLabel ENCFF000IMA Introns
 itemRgb on
 priority 2.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IMA.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IMA.introns.bigBed
 
 track encodeRnaSeqENCFF000IMA
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000IMA Juncs
+longLabel ENCFF000IMA Junctions
 itemRgb on
 priority 2.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IMA.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IMA.juncs.bigBed
 
 
 ################################################################################
@@ -76,7 +76,7 @@ longLabel ENCFF000IMC Alignments
 priority 3.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IMC.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000IMC.bam
 
 track encodeRnaSeqIntronENCFF000IMC
 parent encodeRnaSeq
@@ -84,19 +84,19 @@ shortLabel ENCFF000IMC Introns
 longLabel ENCFF000IMC Introns
 itemRgb on
 priority 3.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IMC.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IMC.introns.bigBed
 
 track encodeRnaSeqENCFF000IMC
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000IMC Juncs
+longLabel ENCFF000IMC Junctions
 itemRgb on
 priority 3.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IMC.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IMC.juncs.bigBed
 
 
 ################################################################################
@@ -107,7 +107,7 @@ longLabel ENCFF000INM Alignments
 priority 4.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000INM.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000INM.bam
 
 track encodeRnaSeqIntronENCFF000INM
 parent encodeRnaSeq
@@ -115,19 +115,19 @@ shortLabel ENCFF000INM Introns
 longLabel ENCFF000INM Introns
 itemRgb on
 priority 4.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000INM.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000INM.introns.bigBed
 
 track encodeRnaSeqENCFF000INM
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000INM Juncs
+longLabel ENCFF000INM Junctions
 itemRgb on
 priority 4.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000INM.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000INM.juncs.bigBed
 
 
 ################################################################################
@@ -138,7 +138,7 @@ longLabel ENCFF000INN Alignments
 priority 5.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000INN.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000INN.bam
 
 track encodeRnaSeqIntronENCFF000INN
 parent encodeRnaSeq
@@ -146,19 +146,19 @@ shortLabel ENCFF000INN Introns
 longLabel ENCFF000INN Introns
 itemRgb on
 priority 5.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000INN.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000INN.introns.bigBed
 
 track encodeRnaSeqENCFF000INN
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000INN Juncs
+longLabel ENCFF000INN Junctions
 itemRgb on
 priority 5.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000INN.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000INN.juncs.bigBed
 
 
 ################################################################################
@@ -169,7 +169,7 @@ longLabel ENCFF000IOD Alignments
 priority 6.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IOD.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000IOD.bam
 
 track encodeRnaSeqIntronENCFF000IOD
 parent encodeRnaSeq
@@ -177,19 +177,19 @@ shortLabel ENCFF000IOD Introns
 longLabel ENCFF000IOD Introns
 itemRgb on
 priority 6.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IOD.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IOD.introns.bigBed
 
 track encodeRnaSeqENCFF000IOD
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000IOD Juncs
+longLabel ENCFF000IOD Junctions
 itemRgb on
 priority 6.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IOD.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IOD.juncs.bigBed
 
 
 ################################################################################
@@ -200,7 +200,7 @@ longLabel ENCFF000IOP Alignments
 priority 7.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IOP.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000IOP.bam
 
 track encodeRnaSeqIntronENCFF000IOP
 parent encodeRnaSeq
@@ -208,19 +208,19 @@ shortLabel ENCFF000IOP Introns
 longLabel ENCFF000IOP Introns
 itemRgb on
 priority 7.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IOP.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IOP.introns.bigBed
 
 track encodeRnaSeqENCFF000IOP
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000IOP Juncs
+longLabel ENCFF000IOP Junctions
 itemRgb on
 priority 7.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IOP.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IOP.juncs.bigBed
 
 
 ################################################################################
@@ -231,7 +231,7 @@ longLabel ENCFF000IQQ Alignments
 priority 8.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IQQ.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000IQQ.bam
 
 track encodeRnaSeqIntronENCFF000IQQ
 parent encodeRnaSeq
@@ -239,19 +239,19 @@ shortLabel ENCFF000IQQ Introns
 longLabel ENCFF000IQQ Introns
 itemRgb on
 priority 8.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IQQ.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IQQ.introns.bigBed
 
 track encodeRnaSeqENCFF000IQQ
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000IQQ Juncs
+longLabel ENCFF000IQQ Junctions
 itemRgb on
 priority 8.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IQQ.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IQQ.juncs.bigBed
 
 
 ################################################################################
@@ -262,7 +262,7 @@ longLabel ENCFF000IQR Alignments
 priority 9.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IQR.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF000IQR.bam
 
 track encodeRnaSeqIntronENCFF000IQR
 parent encodeRnaSeq
@@ -270,19 +270,19 @@ shortLabel ENCFF000IQR Introns
 longLabel ENCFF000IQR Introns
 itemRgb on
 priority 9.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IQR.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IQR.introns.bigBed
 
 track encodeRnaSeqENCFF000IQR
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF000IQR Juncs
+longLabel ENCFF000IQR Junctions
 itemRgb on
 priority 9.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF000IQR.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF000IQR.juncs.bigBed
 
 
 ################################################################################
@@ -293,7 +293,7 @@ longLabel ENCFF016TGP Alignments
 priority 10.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF016TGP.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF016TGP.bam
 
 track encodeRnaSeqIntronENCFF016TGP
 parent encodeRnaSeq
@@ -301,19 +301,19 @@ shortLabel ENCFF016TGP Introns
 longLabel ENCFF016TGP Introns
 itemRgb on
 priority 10.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF016TGP.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF016TGP.introns.bigBed
 
 track encodeRnaSeqENCFF016TGP
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF016TGP Juncs
+longLabel ENCFF016TGP Junctions
 itemRgb on
 priority 10.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF016TGP.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF016TGP.juncs.bigBed
 
 
 ################################################################################
@@ -324,7 +324,7 @@ longLabel ENCFF034BHU Alignments
 priority 11.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF034BHU.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF034BHU.bam
 
 track encodeRnaSeqIntronENCFF034BHU
 parent encodeRnaSeq
@@ -332,19 +332,19 @@ shortLabel ENCFF034BHU Introns
 longLabel ENCFF034BHU Introns
 itemRgb on
 priority 11.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF034BHU.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF034BHU.introns.bigBed
 
 track encodeRnaSeqENCFF034BHU
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF034BHU Juncs
+longLabel ENCFF034BHU Junctions
 itemRgb on
 priority 11.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF034BHU.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF034BHU.juncs.bigBed
 
 
 ################################################################################
@@ -355,7 +355,7 @@ longLabel ENCFF138HQU Alignments
 priority 12.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF138HQU.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF138HQU.bam
 
 track encodeRnaSeqIntronENCFF138HQU
 parent encodeRnaSeq
@@ -363,19 +363,19 @@ shortLabel ENCFF138HQU Introns
 longLabel ENCFF138HQU Introns
 itemRgb on
 priority 12.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF138HQU.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF138HQU.introns.bigBed
 
 track encodeRnaSeqENCFF138HQU
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF138HQU Juncs
+longLabel ENCFF138HQU Junctions
 itemRgb on
 priority 12.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF138HQU.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF138HQU.juncs.bigBed
 
 
 ################################################################################
@@ -386,7 +386,7 @@ longLabel ENCFF456MMS Alignments
 priority 13.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF456MMS.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF456MMS.bam
 
 track encodeRnaSeqIntronENCFF456MMS
 parent encodeRnaSeq
@@ -394,19 +394,19 @@ shortLabel ENCFF456MMS Introns
 longLabel ENCFF456MMS Introns
 itemRgb on
 priority 13.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF456MMS.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF456MMS.introns.bigBed
 
 track encodeRnaSeqENCFF456MMS
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF456MMS Juncs
+longLabel ENCFF456MMS Junctions
 itemRgb on
 priority 13.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF456MMS.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF456MMS.juncs.bigBed
 
 
 ################################################################################
@@ -417,7 +417,7 @@ longLabel ENCFF482SFO Alignments
 priority 14.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF482SFO.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF482SFO.bam
 
 track encodeRnaSeqIntronENCFF482SFO
 parent encodeRnaSeq
@@ -425,19 +425,19 @@ shortLabel ENCFF482SFO Introns
 longLabel ENCFF482SFO Introns
 itemRgb on
 priority 14.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF482SFO.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF482SFO.introns.bigBed
 
 track encodeRnaSeqENCFF482SFO
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF482SFO Juncs
+longLabel ENCFF482SFO Junctions
 itemRgb on
 priority 14.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF482SFO.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF482SFO.juncs.bigBed
 
 
 ################################################################################
@@ -448,7 +448,7 @@ longLabel ENCFF850ZLY Alignments
 priority 15.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF850ZLY.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF850ZLY.bam
 
 track encodeRnaSeqIntronENCFF850ZLY
 parent encodeRnaSeq
@@ -456,19 +456,19 @@ shortLabel ENCFF850ZLY Introns
 longLabel ENCFF850ZLY Introns
 itemRgb on
 priority 15.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF850ZLY.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF850ZLY.introns.bigBed
 
 track encodeRnaSeqENCFF850ZLY
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF850ZLY Juncs
+longLabel ENCFF850ZLY Junctions
 itemRgb on
 priority 15.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF850ZLY.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF850ZLY.juncs.bigBed
 
 
 ################################################################################
@@ -479,7 +479,7 @@ longLabel ENCFF960DLP Alignments
 priority 16.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF960DLP.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF960DLP.bam
 
 track encodeRnaSeqIntronENCFF960DLP
 parent encodeRnaSeq
@@ -487,19 +487,19 @@ shortLabel ENCFF960DLP Introns
 longLabel ENCFF960DLP Introns
 itemRgb on
 priority 16.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF960DLP.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF960DLP.introns.bigBed
 
 track encodeRnaSeqENCFF960DLP
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF960DLP Juncs
+longLabel ENCFF960DLP Junctions
 itemRgb on
 priority 16.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF960DLP.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF960DLP.juncs.bigBed
 
 
 ################################################################################
@@ -510,7 +510,7 @@ longLabel ENCFF993CAL Alignments
 priority 17.0
 type bam
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF993CAL.bam
+bigDataUrl encodeRnaSeq/bams/ENCFF993CAL.bam
 
 track encodeRnaSeqIntronENCFF993CAL
 parent encodeRnaSeq
@@ -518,18 +518,18 @@ shortLabel ENCFF993CAL Introns
 longLabel ENCFF993CAL Introns
 itemRgb on
 priority 17.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF993CAL.introns.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF993CAL.introns.bigBed
 
 track encodeRnaSeqENCFF993CAL
 parent encodeRnaSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel ENCFF993CAL Juncs
+longLabel ENCFF993CAL Junctions
 itemRgb on
 priority 17.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl encodeRnaSeq/ENCFF993CAL.juncs.bigBed
+bigDataUrl encodeRnaSeq/introns/ENCFF993CAL.juncs.bigBed
 
 

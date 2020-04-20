@@ -136,7 +136,18 @@ On blatx
 Starting trans gfServer for cenSat1 on port 17876
 Starting untrans gfServer for cenSat1 on port 17877
 ################################################################################
+# 2020-04-20 updates
 
+- T2T_cenSat_Phase1_2_Array_Annotation.cenRegions.bed
+  This file will replace “Centromere Regions”
+- T2T_cenSat_Phase1_2_Array_Annotation.cenSat.bed
+  This file will replace “HOR Array”
+  
+- updated ‘string decomposer’ bed files here:
+  public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/HORDecomposition/*bed
+  These will replace the data currently hosted “Horde Composition”
+  Can we change the name from “Horde Composition” to “HOR Decomposition”
+  Can we make simple Decomposition one “Mon Decomposition” and the other “HOR Decomposition”
 ################################################################################
 todo:
 ################################################################################

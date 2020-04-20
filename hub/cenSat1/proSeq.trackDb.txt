@@ -1,7 +1,7 @@
 track proSeq
 shortLabel ProSeq
 longLabel ProSeq expression
-superTrack on show
+superTrack on hide
 visibility hide
 group expression
 
@@ -14,7 +14,7 @@ longLabel Combined ProSeq Alignments
 priority 1.0
 type bam
 visibility hide
-bigDataUrl proSeq/proSeq.bam
+bigDataUrl proSeq/bams/proSeq.bam
 
 track proSeqIntronproSeq
 parent proSeq
@@ -22,19 +22,19 @@ shortLabel Combined ProSeq Introns
 longLabel Combined ProSeq Introns
 itemRgb on
 priority 1.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/proSeq.introns.bigBed
+bigDataUrl proSeq/introns/proSeq.introns.bigBed
 
 track proSeqproSeq
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel Combined ProSeq Juncs
+longLabel Combined ProSeq Junctions
 itemRgb on
 priority 1.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/proSeq.juncs.bigBed
+bigDataUrl proSeq/introns/proSeq.juncs.bigBed
 
 
 ################################################################################
@@ -45,7 +45,7 @@ longLabel CHM13-5A_S1_L001_R1_001 Alignments
 priority 2.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L001_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5A_S1_L001_R1_001.bam
 
 track proSeqIntronCHM13-5A_S1_L001_R1_001
 parent proSeq
@@ -53,19 +53,19 @@ shortLabel CHM13-5A_S1_L001_R1_001 Introns
 longLabel CHM13-5A_S1_L001_R1_001 Introns
 itemRgb on
 priority 2.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L001_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L001_R1_001.introns.bigBed
 
 track proSeqCHM13-5A_S1_L001_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5A_S1_L001_R1_001 Juncs
+longLabel CHM13-5A_S1_L001_R1_001 Junctions
 itemRgb on
 priority 2.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L001_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L001_R1_001.juncs.bigBed
 
 
 ################################################################################
@@ -76,7 +76,7 @@ longLabel CHM13-5A_S1_L002_R1_001 Alignments
 priority 3.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L002_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5A_S1_L002_R1_001.bam
 
 track proSeqIntronCHM13-5A_S1_L002_R1_001
 parent proSeq
@@ -84,19 +84,19 @@ shortLabel CHM13-5A_S1_L002_R1_001 Introns
 longLabel CHM13-5A_S1_L002_R1_001 Introns
 itemRgb on
 priority 3.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L002_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L002_R1_001.introns.bigBed
 
 track proSeqCHM13-5A_S1_L002_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5A_S1_L002_R1_001 Juncs
+longLabel CHM13-5A_S1_L002_R1_001 Junctions
 itemRgb on
 priority 3.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L002_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L002_R1_001.juncs.bigBed
 
 
 ################################################################################
@@ -107,7 +107,7 @@ longLabel CHM13-5A_S1_L003_R1_001 Alignments
 priority 4.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L003_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5A_S1_L003_R1_001.bam
 
 track proSeqIntronCHM13-5A_S1_L003_R1_001
 parent proSeq
@@ -115,19 +115,19 @@ shortLabel CHM13-5A_S1_L003_R1_001 Introns
 longLabel CHM13-5A_S1_L003_R1_001 Introns
 itemRgb on
 priority 4.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L003_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L003_R1_001.introns.bigBed
 
 track proSeqCHM13-5A_S1_L003_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5A_S1_L003_R1_001 Juncs
+longLabel CHM13-5A_S1_L003_R1_001 Junctions
 itemRgb on
 priority 4.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L003_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L003_R1_001.juncs.bigBed
 
 
 ################################################################################
@@ -138,7 +138,7 @@ longLabel CHM13-5A_S1_L004_R1_001 Alignments
 priority 5.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L004_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5A_S1_L004_R1_001.bam
 
 track proSeqIntronCHM13-5A_S1_L004_R1_001
 parent proSeq
@@ -146,19 +146,19 @@ shortLabel CHM13-5A_S1_L004_R1_001 Introns
 longLabel CHM13-5A_S1_L004_R1_001 Introns
 itemRgb on
 priority 5.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L004_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L004_R1_001.introns.bigBed
 
 track proSeqCHM13-5A_S1_L004_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5A_S1_L004_R1_001 Juncs
+longLabel CHM13-5A_S1_L004_R1_001 Junctions
 itemRgb on
 priority 5.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5A_S1_L004_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5A_S1_L004_R1_001.juncs.bigBed
 
 
 ################################################################################
@@ -169,7 +169,7 @@ longLabel CHM13-5B_S2_L001_R1_001 Alignments
 priority 6.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L001_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5B_S2_L001_R1_001.bam
 
 track proSeqIntronCHM13-5B_S2_L001_R1_001
 parent proSeq
@@ -177,19 +177,19 @@ shortLabel CHM13-5B_S2_L001_R1_001 Introns
 longLabel CHM13-5B_S2_L001_R1_001 Introns
 itemRgb on
 priority 6.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L001_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L001_R1_001.introns.bigBed
 
 track proSeqCHM13-5B_S2_L001_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5B_S2_L001_R1_001 Juncs
+longLabel CHM13-5B_S2_L001_R1_001 Junctions
 itemRgb on
 priority 6.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L001_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L001_R1_001.juncs.bigBed
 
 
 ################################################################################
@@ -200,7 +200,7 @@ longLabel CHM13-5B_S2_L002_R1_001 Alignments
 priority 7.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L002_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5B_S2_L002_R1_001.bam
 
 track proSeqIntronCHM13-5B_S2_L002_R1_001
 parent proSeq
@@ -208,19 +208,19 @@ shortLabel CHM13-5B_S2_L002_R1_001 Introns
 longLabel CHM13-5B_S2_L002_R1_001 Introns
 itemRgb on
 priority 7.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L002_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L002_R1_001.introns.bigBed
 
 track proSeqCHM13-5B_S2_L002_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5B_S2_L002_R1_001 Juncs
+longLabel CHM13-5B_S2_L002_R1_001 Junctions
 itemRgb on
 priority 7.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L002_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L002_R1_001.juncs.bigBed
 
 
 ################################################################################
@@ -231,7 +231,7 @@ longLabel CHM13-5B_S2_L003_R1_001 Alignments
 priority 8.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L003_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5B_S2_L003_R1_001.bam
 
 track proSeqIntronCHM13-5B_S2_L003_R1_001
 parent proSeq
@@ -239,19 +239,19 @@ shortLabel CHM13-5B_S2_L003_R1_001 Introns
 longLabel CHM13-5B_S2_L003_R1_001 Introns
 itemRgb on
 priority 8.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L003_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L003_R1_001.introns.bigBed
 
 track proSeqCHM13-5B_S2_L003_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5B_S2_L003_R1_001 Juncs
+longLabel CHM13-5B_S2_L003_R1_001 Junctions
 itemRgb on
 priority 8.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L003_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L003_R1_001.juncs.bigBed
 
 
 ################################################################################
@@ -262,7 +262,7 @@ longLabel CHM13-5B_S2_L004_R1_001 Alignments
 priority 9.0
 type bam
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L004_R1_001.bam
+bigDataUrl proSeq/bams/CHM13-5B_S2_L004_R1_001.bam
 
 track proSeqIntronCHM13-5B_S2_L004_R1_001
 parent proSeq
@@ -270,18 +270,18 @@ shortLabel CHM13-5B_S2_L004_R1_001 Introns
 longLabel CHM13-5B_S2_L004_R1_001 Introns
 itemRgb on
 priority 9.1
-type bed 9
+type bigBed 9
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L004_R1_001.introns.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L004_R1_001.introns.bigBed
 
 track proSeqCHM13-5B_S2_L004_R1_001
 parent proSeq
-shortLabel Juncs
-longLabel Junctions
+shortLabel CHM13-5B_S2_L004_R1_001 Juncs
+longLabel CHM13-5B_S2_L004_R1_001 Junctions
 itemRgb on
 priority 9.2
-type bed 12
+type bigBed 12
 visibility hide
-bigDataUrl proSeq/CHM13-5B_S2_L004_R1_001.juncs.bigBed
+bigDataUrl proSeq/introns/CHM13-5B_S2_L004_R1_001.juncs.bigBed
 
 
