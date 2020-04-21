@@ -137,7 +137,6 @@ Starting trans gfServer for cenSat1 on port 17876
 Starting untrans gfServer for cenSat1 on port 17877
 ################################################################################
 # 2020-04-20 updates
-
 - T2T_cenSat_Phase1_2_Array_Annotation.cenRegions.bed
   This file will replace “Centromere Regions”
 - T2T_cenSat_Phase1_2_Array_Annotation.cenSat.bed
@@ -148,6 +147,26 @@ Starting untrans gfServer for cenSat1 on port 17877
   These will replace the data currently hosted “Horde Composition”
   Can we change the name from “Horde Composition” to “HOR Decomposition”
   Can we make simple Decomposition one “Mon Decomposition” and the other “HOR Decomposition”
+################################################################################
+# 2020-04-20 lastz alignments to hg38
+
+- due to redundancy in T2T tigs, can't build nets
+- base alignments on hg38 human/chimp process
+  T2T_cenSat_hub/build/cenSat1/hg38lastz/DEF
+
+# repeat mask twobit
+  # UCSC script requires database name in dir
+  cd T2T_cenSat/hg38lastz/cenSat1
+  bigBedToBed rmsk.bigBed stdout | twoBitMask -type=.bed ../hub/cenSat1/cenSat1.2bit stdin cenSat1.mask.2bit
+
+  # query=cenSat1 target=hg38
+  ln -s ../../T2T_cenSat_hub/build/cenSat1/hg38lastz/DEF .
+  cp /scratch/data/blastz/human_chimp.v2.q cenSat1/
+  doBlastzChainNet.pl -stop chainMerge DEF >&1.log&
+
+
+  chainToPsl results/hg38.cenSat1.all.chain.gz  /hive/data/genomes/hg38/chrom.sizes /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hub/cenSat1/cenSat1.sizes  /hive/data/genomes/hg38/hg38.2bit /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hg38lastz/cenSat1/cenSat1.mask.2bit results/hg38.cenSat1.all.psl
+
 ################################################################################
 todo:
 ################################################################################

@@ -23,26 +23,6 @@ type bam
 visibility hide
 bigDataUrl proSeq/bams/{track}.bam
 
-track proSeqIntron{track}
-parent proSeq
-shortLabel {name} Introns
-longLabel {name} Introns
-itemRgb on
-priority {pri}.1
-type bigBed 9
-visibility hide
-bigDataUrl proSeq/introns/{track}.introns.bigBed
-
-track proSeq{track}
-parent proSeq
-shortLabel {name} Juncs
-longLabel {name} Junctions
-itemRgb on
-priority {pri}.2
-type bigBed 12
-visibility hide
-bigDataUrl proSeq/introns/{track}.juncs.bigBed
-
 """
 
 trackSpecs = (
