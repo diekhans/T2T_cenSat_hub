@@ -40,7 +40,8 @@ track horArray
 shortLabel HOR Array
 longLabel HOR Array
 color 220,20,60
-type bigBed
+type bigBed 9
+itemRgb on
 visibility hide
 bigDataUrl horArray.bigBed
 priority 12

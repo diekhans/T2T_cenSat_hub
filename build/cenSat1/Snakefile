@@ -216,7 +216,7 @@ rule rmsk:
 ##
 # HOR arrays, etc
 ##
-horArrayBed = osp.join(phase1SrcDir, "T2T_cenSat_Phase1_2_Array_Annotation.cenSat.tsv.bed")
+horArrayBed = osp.join(phase1SrcDir, "T2T_cenSat_Phase1_2_Array_Annotation.cenSat.tsv.2.bed")
 rule horArray:
     input: horArrayBed, asmSizes
     output: horArrayBigBed
@@ -339,7 +339,7 @@ rule asHorAnnOri:
 
 # horDecomposition
 rule horDecomposition:
-    input: glob.glob(osp.join(phase1SrcDir, "hordecomposition_cen*.bed"))
+    input: glob.glob(osp.join(phase1SrcDir, "042120_HORDecomposition/HORDecompositionNew/*bed"))
     output: horDecompositionBigBed
     run:
         buildBigBed({input}, horDecompositionBigBed, bedType="bed9")
