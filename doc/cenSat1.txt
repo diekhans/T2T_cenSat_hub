@@ -164,9 +164,23 @@ Starting untrans gfServer for cenSat1 on port 17877
   cp /scratch/data/blastz/human_chimp.v2.q cenSat1/
   doBlastzChainNet.pl -stop chainMerge DEF >&1.log&
 
-
-  chainToPsl results/hg38.cenSat1.all.chain.gz  /hive/data/genomes/hg38/chrom.sizes /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hub/cenSat1/cenSat1.sizes  /hive/data/genomes/hg38/hg38.2bit /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hg38lastz/cenSat1/cenSat1.mask.2bit results/hg38.cenSat1.all.psl
-
+  # recalc match so we can filter.
+  # single job is very slong; split -C can result in partial lines
+  # it they are longer that the linit.
+  # max lines size is 1042177, so using -C gt this should work
+  chainToPslBasic results/hg38.cenSat1.all.chain.gz tmp/hg38.cenSat1.all.basic.psl
+  cd tmp
+  mkdir parts recalc
+  split -a 6 -C 1M hg38.cenSat1.all.basic.psl parts/part.
+  find parts -type f | parallel pslCheck |& egrep -v 'failed: 0 errors: 0'
+  find parts -type f  >recalc.jobs
+  # jobs like
+  pslRecalcMatch parts/XXX /hive/data/genomes/hg38/hg38.2bit /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hg38lastz/cenSat1/cenSat1.mask.2bit {check out exists recalc/XXX}
+  # SHOULD HAVE USED sort  --parallel
+  find tmp/recalc -type f |xargs cat |sort -k 14,14 -k16,16n |gzip -c >results/hg38.cenSat1.all.psl.gz
+  pslSwap results/hg38.cenSat1.all.psl.gz stdout|sort -k 14,14 -k16,16n |gzip -c >results/cenSat1.hg38.all.psl.gz
+  pslToBigPsl results/cenSat1.hg38.all.psl.gz tmp/cenSat1.hg38.all.bigPslIn
+  bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp/cenSat1.hg38.all.bigPslIn /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hub/cenSat1/cenSat1.sizes results/cenSat1.hg38.all.bigPsl
 ################################################################################
 todo:
 ################################################################################
