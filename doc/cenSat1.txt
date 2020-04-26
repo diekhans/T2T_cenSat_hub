@@ -203,6 +203,11 @@ Starting untrans gfServer for cenSat1 on port 17877
 
 ################################################################################
 # 2020-04-23: map Segmental Dups
+   cd T2T_cenSat/cenSat1/hg38aligns/genomicSuperDups/tmp
+   hgsql hg38 -Ne 'select * from genomicSuperDups' | cut -f 2-7 > hg38.genomicSuperDups.bed
+   liftOver -tab -bedPlus=6 -multiple -noSerial  hg38.genomicSuperDups.bed ../../hg38_cenSat1_lastz/axtChain/hg38.cenSat1.over.chain.gz stdout cenSat1.genomicSuperDups.unmapped.bed   | sort -k1,1 -k2,2n >cenSat1.genomicSuperDups.bed
+   bedToBigBed -tab -type=bed6 cenSat1.genomicSuperDups.bed ../../../../hub/cenSat1/cenSat1.sizes ../cenSat1.genomicSuperDups.bigBed
+    rsync -a hg38aligns $courtyard:compbio/nanopore/projs/t2t-centromere/T2T_cenSat
 
 ################################################################################
 todo:
