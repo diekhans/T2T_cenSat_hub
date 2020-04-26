@@ -108,7 +108,7 @@ new list in phase1/browser/hiCanu_ALR_HSat23.txt
 
 ################################################################################
 # 2020-04-10 produce repeatmasker for unmasked contigs
-  cd repeatmask/build/data
+  cd cenSat1/repeatmask/build/data
   get http://public.gi.ucsc.edu/~khmiga/censat/chm13_hicanu_hifi_20k.fasta
   faSomeRecords -exclude chm13_hicanu_hifi_20k.fasta tigs-with-rm.lst stdout | faSplit byname stdin ../tigs/
 
@@ -150,37 +150,60 @@ Starting untrans gfServer for cenSat1 on port 17877
 ################################################################################
 # 2020-04-20 lastz alignments to hg38
 
-- due to redundancy in T2T tigs, can't build nets
+- redundancy in T2T tigs might cause problems with nets
+- need both directions to do cenSat tracks and mapping back to cenSat
 - base alignments on hg38 human/chimp process
   T2T_cenSat_hub/build/cenSat1/hg38lastz/DEF
 
 # repeat mask twobit
   # UCSC script requires database name in dir
-  cd T2T_cenSat/hg38lastz/cenSat1
+  cd T2T_cenSat/cenSat1/hg38lastz/cenSat1
   bigBedToBed rmsk.bigBed stdout | twoBitMask -type=.bed ../hub/cenSat1/cenSat1.2bit stdin cenSat1.mask.2bit
 
   # query=cenSat1 target=hg38
   ln -s ../../T2T_cenSat_hub/build/cenSat1/hg38lastz/DEF .
   cp /scratch/data/blastz/human_chimp.v2.q cenSat1/
-  doBlastzChainNet.pl -stop chainMerge DEF >&1.log&
+  doBlastzChainNet.pl -stop net -syntenicNet DEF >&1.log&
 
-  # recalc match so we can filter.
-  # single job is very slong; split -C can result in partial lines
-  # it they are longer that the linit.
-  # max lines size is 1042177, so using -C gt this should work
-  chainToPslBasic results/hg38.cenSat1.all.chain.gz tmp/hg38.cenSat1.all.basic.psl
-  cd tmp
-  mkdir parts recalc
-  split -a 6 -C 1M hg38.cenSat1.all.basic.psl parts/part.
-  find parts -type f | parallel pslCheck |& egrep -v 'failed: 0 errors: 0'
-  find parts -type f  >recalc.jobs
-  # jobs like
-  pslRecalcMatch parts/XXX /hive/data/genomes/hg38/hg38.2bit /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hg38lastz/cenSat1/cenSat1.mask.2bit {check out exists recalc/XXX}
-  # SHOULD HAVE USED sort  --parallel
-  find tmp/recalc -type f |xargs cat |sort -k 14,14 -k16,16n |gzip -c >results/hg38.cenSat1.all.psl.gz
-  pslSwap results/hg38.cenSat1.all.psl.gz stdout|sort -k 14,14 -k16,16n |gzip -c >results/cenSat1.hg38.all.psl.gz
-  pslToBigPsl results/cenSat1.hg38.all.psl.gz tmp/cenSat1.hg38.all.bigPslIn
-  bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp/cenSat1.hg38.all.bigPslIn /hive/users/markd/nanopore/projs/t2t-centromere/T2T_cenSat/hub/cenSat1/cenSat1.sizes results/cenSat1.hg38.all.bigPsl
+  time (doBlastzChainNet.pl -verbose=2 \
+        -swap /cluster/home/markd/compbio/nanopore/projs/t2t-centromere/T2T_cenSat/hg38lastz//DEF \
+        -chainMinScore=5000 -chainLinearGap=medium \
+        -workhorse=hgwdev -smallClusterHub=ku -bigClusterHub=ku \
+        -syntenicNet -stop net) > swap.log 2>&1
+
+    opps, forgot -swapDir move into place
+
+    # rename and compress netfiles
+
+    # reorganize into:
+      hg38aligns/cenSat1_hg38_lastz/
+      hg38aligns/hg38_cenSat1_lastz/
+
+    # create synteic bigChain
+    cd cenSat1_hg38_lastz/tmp
+    hgLoadChain -noBin -test no bigChain ../axtChain/cenSat1.hg38.over.chain.gz
+    sed 's/.000000//' chain.tab | awk 'BEGIN {OFS="\t"} {print $2, $4, $5, $11, 1000, $8, $3, $6, $7, $9, $10, $1}' > tmp.bigChain
+    bedToBigBed -type=bed6+6 -as=${HOME}/kent/src/hg/lib/bigChain.as -tab tmp.bigChain ../../../../hub/cenSat1/cenSat1.sizes ../cenSat1.hg38.over.bigChain
+
+    awk 'BEGIN {OFS="\t"} {print $1, $2, $3, $5, $4}' link.tab | sort -k1,1 -k2,2n --parallel=10 > tmp.bigLink
+    bedToBigBed -type=bed4+1 -as=${HOME}/kent/src/hg/lib/bigLink.as -tab tmp.bigLink  ../../../hub/cenSat1/cenSat1.sizes ../cenSat1.hg38.over.bigLink
+
+    # create all bigChain
+    cd cenSat1_hg38_lastz/tmp
+    hgLoadChain -noBin -test no bigChain ../axtChain/cenSat1.hg38.all.chain.gz
+    sed 's/.000000//' chain.tab | awk 'BEGIN {OFS="\t"} {print $2, $4, $5, $11, 1000, $8, $3, $6, $7, $9, $10, $1}' > tmp.bigChain
+    bedToBigBed -type=bed6+6 -as=${HOME}/kent/src/hg/lib/bigChain.as -tab tmp.bigChain ../../../../hub/cenSat1/cenSat1.sizes ../cenSat1.hg38.all.bigChain
+
+    awk 'BEGIN {OFS="\t"} {print $1, $2, $3, $5, $4}' link.tab | sort -k1,1 -k2,2n --parallel=10 > tmp.bigLink
+    bedToBigBed -type=bed4+1 -as=${HOME}/kent/src/hg/lib/bigLink.as -tab tmp.bigLink  ../../../../hub/cenSat1/cenSat1.sizes ../cenSat1.hg38.all.bigLink
+
+
+    cd T2T_cenSat/cenSat1/
+    rsync -a hg38aligns $courtyard:compbio/nanopore/projs/t2t-centromere/T2T_cenSat
+
+################################################################################
+# 2020-04-23: map Segmental Dups
+
 ################################################################################
 todo:
 ################################################################################
