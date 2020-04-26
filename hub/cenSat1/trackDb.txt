@@ -179,7 +179,29 @@ bigDataUrl horDecomposition.bigBed
 priority 22
 group annotation
 
+track grch38SynChains
+shortLabel GRCh38 Syntenic Chains
+longLabel  GRCh38 LASTZ Alignment Syntenic Chains
+type bigChain
+color 20,60,220
+maxItems 100000
+visibility hide
+bigDataUrl grch38/cenSat1.hg38.over.bigChain
+linkDataUrl grch38/cenSat1.hg38.over.bigLink
+priority 30
+group grch38
 
+track grch38AllChains
+shortLabel GRCh38 all Chains
+longLabel  GRCh38 LASTZ Alignment Chains
+type bigChain
+color 20,0,220
+maxItems 100000
+visibility hide
+bigDataUrl grch38/cenSat1.hg38.all.bigChain
+linkDataUrl grch38/cenSat1.hg38.all.bigLink
+priority 30.1
+group grch38
 
 # track rawMethCalls
 # shortLabel Raw meth

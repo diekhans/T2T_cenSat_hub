@@ -4,7 +4,7 @@ longLabel ProSeq expression
 superTrack on hide
 visibility hide
 group expression
-
+priority 20
 
 ################################################################################
 track proSeqAlnproSeq

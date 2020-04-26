@@ -4,6 +4,7 @@ longLabel Encode RNA-Seq expression
 superTrack on hide
 visibility hide
 group expression
+priority 10
 
 
 ################################################################################
