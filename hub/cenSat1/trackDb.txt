@@ -30,8 +30,8 @@ priority 11
 group assembly
 
 track pangenome
-shortLabel Pangenome reads
-longLabel  Pangenome 100kb reads
+shortLabel Human pangenome
+longLabel Human pangenome 100kb reads
 type bam
 visibility hide
 bigDataUrl data/all_genomes_lt100kb.chm13_hicanu_hifi_20k.sorted.bam
