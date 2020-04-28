@@ -280,7 +280,7 @@ rule cenSat1Hg38Align:
 
 ##
 # monDecomposition
-monDecompBeds = list(glob.glob(osp.join(phase1SrcDir, "decomposition_cen*.bed")))
+monDecompBeds = list(glob.glob(osp.join(phase1SrcDir, "042720_MonDecomposition/decomposition*.bed")))
 rule monDecomp:
     input: monDecompBeds
     output: monDecompositionBigBed

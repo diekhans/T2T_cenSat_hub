@@ -1,3 +1,6 @@
+##
+# group assembly
+##
 track centromereRegions
 shortLabel Centromere Regions
 longLabel Centromere Regions
@@ -26,6 +29,19 @@ bigDataUrl data/chm13_20k_hiFi_master0103.centromereONTMethylation.bam
 priority 11
 group assembly
 
+track pangenome
+shortLabel Pangenome reads
+longLabel  Pangenome 100kb reads
+type bam
+visibility hide
+bigDataUrl data/all_genomes_lt100kb.chm13_hicanu_hifi_20k.sorted.bam
+priority 12
+group assembly
+
+
+##
+# group annotation
+##
 track rmsk
 shortLabel Repeat Masker
 longLabel Repeat Masker
@@ -182,7 +198,7 @@ group annotation
 track grch38SynChains
 shortLabel GRCh38 Syntenic Chains
 longLabel  GRCh38 LASTZ Alignment Syntenic Chains
-type bigChain
+type bigChain hg38
 color 20,60,220
 maxItems 100000
 visibility hide
@@ -191,10 +207,13 @@ linkDataUrl grch38/cenSat1.hg38.over.bigLink
 priority 30
 group grch38
 
+##
+# group grch38
+##
 track grch38AllChains
 shortLabel GRCh38 all Chains
 longLabel  GRCh38 LASTZ Alignment Chains
-type bigChain
+type bigChain hg38
 color 20,0,220
 maxItems 100000
 visibility hide
@@ -213,14 +232,27 @@ bigDataUrl grch38/cenSat1.genomicSuperDups.bigBed
 priority 30.2
 group grch38
 
-# track rawMethCalls
-# shortLabel Raw meth
-# longLabel Raw methylation calls
-# type bigWig
-# visibility hide
-# bigDataUrl rawMethCalls.bigWig
-# priority 19
-# group annotation
+
+##
+# group expression
+##
+track NA12878cDNA
+shortLabel NA12878 cDNA
+longLabel NA12878 ONT cDNA
+type bam
+visibility hide
+bigDataUrl data/NA12878-cDNA-1D.all.chm13_hicanu_hifi_20k.sorted.bam
+priority 10
+group expression
+
+track NA12878nvDNA
+shortLabel NA12878 nvDNA
+longLabel NA12878 ONT nvDNA
+type bam
+visibility hide
+bigDataUrl data/NA12878-nvRNA.all.chm13_hicanu_hifi_20k.sorted.bam
+priority 20
+group expression
 
 include encodeRnaSeq.trackDb.txt
 include proSeq.trackDb.txt
