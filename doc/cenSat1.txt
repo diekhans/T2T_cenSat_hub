@@ -212,20 +212,8 @@ Starting untrans gfServer for cenSat1 on port 17877
 ################################################################################
 todo:
 
-- Tatiana provided another update to Mon_Decomposition track:
-  bed files are here --> /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/042720_MonDecomposition
+- gencode and refseq transmap
 
-- Also, Miten shared the GM12878 Nanopore cDNA (and direct RNA) alignment bams:
-  Files --> /public/groups/nanopore/miten/public_html/H2M/
-  NA12878-cDNA-1D.all.chm13_hicanu_hifi_20k.sorted.bam
-  NA12878-cDNA-1D.all.chm13_hicanu_hifi_20k.sorted.bam.bai
-  NA12878-nvRNA.all.chm13_hicanu_hifi_20k.sorted.bam
-  NA12878-nvRNA.all.chm13_hicanu_hifi_20k.sorted.bam.bai
-
-- Out of curiosity I asked Miten to help generate alignments using 100kb+ reads from a panel of diverse individuals.  He also uploaded those data in the same directory:
-  Files --> /public/groups/nanopore/miten/public_html/H2M/
-  all_genomes_lt100kb.chm13_hicanu_hifi_20k.sorted.bam
-  all_genomes_lt100kb.chm13_hicanu_hifi_20k.sorted.bam.bai
 ################################################################################
 debug
 /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/tig*_raw_meth_calls.wig
