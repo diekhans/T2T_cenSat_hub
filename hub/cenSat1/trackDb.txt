@@ -262,7 +262,7 @@ transMapSrcSet ensembl
 group genes
 type bigPsl
 priority 10.001
-color 0,100,0
+color 50,100,0
 canPack on
 visibility hide
 baseColorDefault diffCodons
@@ -288,7 +288,7 @@ transMapSrcSet refseq
 group genes
 type bigPsl
 priority 10.003
-color 0,100,0
+color 0,50,100
 canPack on
 visibility hide
 baseColorDefault diffCodons
@@ -314,7 +314,7 @@ transMapSrcSet ensembl
 group genes
 type bigPsl
 priority 11.001
-color 0,100,0
+color 50,150,0
 canPack on
 visibility hide
 baseColorDefault diffCodons
@@ -334,13 +334,13 @@ searchIndex name,srcTransId,geneName,geneId
 
 track transMapRefSeqSyn
 shortLabel TransMap RefSeq (syn)
-longLabel TransMap RefSeq Gene Mappings (syn chains)
+longLabel TransMap RefSeq Gene Mappings (syntenic chains)
 #html transMapRefSeq
 transMapSrcSet refseq
 group genes
 type bigPsl
 priority 11.003
-color 0,100,0
+color 0,50,150
 canPack on
 visibility hide
 baseColorDefault diffCodons
