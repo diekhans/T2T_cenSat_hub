@@ -254,5 +254,57 @@ bigDataUrl data/NA12878-nvRNA.all.chm13_hicanu_hifi_20k.sorted.bam
 priority 20
 group expression
 
+track transMapEnsembl
+shortLabel TransMap Ensembl
+longLabel TransMap Ensembl and GENCODE Mappings Version 4
+html transMapEnsembl
+transMapSrcSet ensembl
+group genes
+type bigPsl
+priority 10.001
+color 0,100,0
+canPack on
+visibility hide
+baseColorDefault diffCodons
+baseColorUseCds given
+baseColorUseSequence lfExtra
+indelDoubleInsert on
+indelQueryInsert on
+showDiffBasesAllScales .
+showDiffBasesMaxZoom 10000.0
+showCdsAllScales .
+showCdsMaxZoom 10000.0
+labelFields commonName,orgAbbrev,srcDb,srcTransId,name,geneName,geneId,geneType,transcriptType
+defaultLabelFields orgAbbrev,geneName
+labelSeparator " "
+bigDataUrl transMap/cenSat1.ensembl.transMapV1.bigPsl
+searchIndex name,srcTransId,geneName,geneId
+
+track transMapRefSeq
+shortLabel TransMap RefGene
+longLabel TransMap RefSeq Gene Mappings Version 4
+html transMapRefSeq
+transMapSrcSet refseq
+group genes
+type bigPsl
+priority 10.003
+color 0,100,0
+canPack on
+visibility hide
+baseColorDefault diffCodons
+baseColorUseCds given
+baseColorUseSequence lfExtra
+indelDoubleInsert on
+indelQueryInsert on
+showDiffBasesAllScales .
+showDiffBasesMaxZoom 10000.0
+showCdsAllScales .
+showCdsMaxZoom 10000.0
+labelFields commonName,orgAbbrev,srcDb,srcTransId,name,geneName,geneId
+defaultLabelFields orgAbbrev,geneName
+labelSeparator " "
+bigDataUrl transMap/cenSat1.refseq.transMapV1.bigPsl
+searchIndex name,srcTransId,geneName,geneId
+
 include encodeRnaSeq.trackDb.txt
 include proSeq.trackDb.txt
