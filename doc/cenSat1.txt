@@ -225,6 +225,8 @@ Starting untrans gfServer for cenSat1 on port 17877
 
   # manually create
   sqlite3 data/genome.db < ../../../../T2T_cenSat_hub/build/cenSat1/transMap/genomeDb.sql 
+
+  # build with all chains
   mappingChainBuild data/genome.db hg38 cenSat1 all data/chains/hg38/cenSat1/hg38.cenSat1.all.chain
   transMapBatch ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py hg38 cenSat1 ensembl all >&ens.log
   transMapBatch ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py hg38 cenSat1 refseq all >&ref.log
@@ -233,10 +235,21 @@ Starting untrans gfServer for cenSat1 on port 17877
   transMapBuildBigPsl ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py cenSat1 refseq hg38 >&ref.log &
   mv results/mapped/cenSat1/cenSat1.* ../mapped/
 
+  # build with syntenic chains
+  mappingChainBuild data/genome.db hg38 cenSat1 syn data/chains/hg38/cenSat1/hg38.cenSat1.syn.chain
+  transMapBatch ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py hg38 cenSat1 ensembl syn >&ens.log&
+  transMapBatch ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py hg38 cenSat1 refseq syn >&ref.log&
+
+  transMapBuildBigPsl ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py cenSat1 ensembl hg38 >&ens.log &
+  transMapBuildBigPsl ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py cenSat1 refseq hg38 >&ref.log &
+  mv results/mapped/cenSat1/cenSat1.ensembl.transMapV1.bigPsl results/mapped/cenSat1/cenSat1.ensembl.syn.transMapV1.bigPsl
+  mv results/mapped/cenSat1/cenSat1.refseq.transMapV1.bigPsl results/mapped/cenSat1/cenSat1.refseq.syn.transMapV1.bigPsl
+  
+  mv results/mapped/cenSat1/cenSat1.* ../mapped/
+  rsync ../mapped/cenSat1.* $courtyard:/nanopore/markd/t2t-centromere/T2T_cenSat/hub/cenSat1/transMap/
+
 ################################################################################
 todo:
-
-- gencode and refseq transmap
 
 ################################################################################
 debug
