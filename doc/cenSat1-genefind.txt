@@ -133,3 +133,14 @@ gensub2 <(find bams -name '*.bam') <(echo 1) introns.tmpl introns.jobs
 for f in bams/*.bam ; do (samtools index $f &); done
 
 #################################################################################
+analysis:
+from KM:
+  tig00000514:91520119-91789872
+  tig00001215:14337883-14629565
+
+jvb:
+  assemble transcripts
+  - stringtie
+  - https://academic.oup.com/gigascience/article/8/5/giz039/5488105
+    Trinity of course
+    You might have to pull the fastq sequences out based on whether they align to your centromere.

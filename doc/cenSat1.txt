@@ -209,6 +209,30 @@ Starting untrans gfServer for cenSat1 on port 17877
    bedToBigBed -tab -type=bed6 cenSat1.genomicSuperDups.bed ../../../../hub/cenSat1/cenSat1.sizes ../cenSat1.genomicSuperDups.bigBed
     rsync -a hg38aligns $courtyard:compbio/nanopore/projs/t2t-centromere/T2T_cenSat
 
+#################################################################################
+2020-04-30 transMap
+  export PATH=${HOME}/compbio/projs/transMap/transMap-dev/bin:${PATH}
+  cd T2T_cenSat/cenSat1/transMap/work
+  
+
+  srcDbLoadEnsemblAligns hg38 ensembl data/src/hg38/hg38.ensembl.src.db
+  srcDbLoadEnsemblMetadata hg38 ensembl data/src/hg38/hg38.ensembl.src.db
+  srcDbLoadEnsemblSeqs hg38 ensembl data/src/hg38/hg38.ensembl.src.db  
+
+  srcDbLoadGenbankAligns hg38 refseq data/src/hg38/hg38.refseq.src.db
+  srcDbLoadGenbankMetadata hg38 refseq data/src/hg38/hg38.refseq.src.db
+  srcDbLoadGenbankSeqs hg38 refseq data/src/hg38/hg38.refseq.src.db  
+
+  # manually create
+  sqlite3 data/genome.db < ../../../../T2T_cenSat_hub/build/cenSat1/transMap/genomeDb.sql 
+  mappingChainBuild data/genome.db hg38 cenSat1 all data/chains/hg38/cenSat1/hg38.cenSat1.all.chain
+  transMapBatch ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py hg38 cenSat1 ensembl all >&ens.log
+  transMapBatch ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py hg38 cenSat1 refseq all >&ref.log
+
+  transMapBuildBigPsl ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py cenSat1 ensembl hg38 >&ens.log &
+  transMapBuildBigPsl ../../../../T2T_cenSat_hub/build/cenSat1/transMap/transMapBuildConf.py cenSat1 refseq hg38 >&ref.log &
+  mv results/mapped/cenSat1/cenSat1.* ../mapped/
+
 ################################################################################
 todo:
 
