@@ -29,6 +29,17 @@ bigDataUrl data/chm13_20k_hiFi_master0103.centromereONTMethylation.bam
 priority 11
 group assembly
 
+track methylationCalls
+shortLabel Methylation Call
+longLabel Methylation Call
+type bigWig 0.0 1.0
+visibility hide
+bigDataUrl data/raw_meth_calls.bigWig
+viewLimitsMax 0:1
+maxHeightPixels 100:32:8
+priority 11.5
+group assembly
+
 track pangenome
 shortLabel Human pangenome
 longLabel Human pangenome 100kb reads

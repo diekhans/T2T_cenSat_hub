@@ -257,7 +257,12 @@ track name=‘hg38_SD’ description=‘hg38 segDup minimap2 phase1_2 ctRegions�
 /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/hg38.SD.hicanu_phase1_2.ctRegions_5kbPlus.cenSatBrowser.bed
 cd hub/cenSat1/grch38
 bedSort /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/hg38.SD.hicanu_phase1_2.ctRegions_5kbPlus.cenSatBrowser.bed ~/tmp/x.bed
-bedToBigBed -type=bed9 ~/tmp/x.bed ../cenSat1.sizes cenSat1.alignSegDups.bigBed 
+bedToBigBed -type=bed9 ~/tmp/x.bed ../cenSat1.sizes cenSat1.alignSegDups.bigBed
+################################################################################
+2020-05-29: methylation from ariel
+ new wig files here: /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/meth/*.wig
+awk '!/^track/' /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/meth/*_raw_meth_calls.wig  >raw_meth_calls.wig
+wigToBigWig raw_meth_calls.wig  ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes ../../../../T2T_cenSat/hub/cenSat1/data/raw_meth_calls.bigWig
 ################################################################################
 2020-05-27 @mydennis we have a list of CN control regions from hg38 that we
            want to liftover to the CHM13 hiCanu (include-control_hg38.bed)
@@ -268,8 +273,6 @@ liftOver  include-control_hg38.bed ../hg38aligns/hg38_cenSat1_lastz/axtChain/hg3
 #  not made into track for now, just using for analysis.
 ################################################################################
 todo:
-Hi Mark. I dropped the ball with the methylation data…just saw the link from ariel.
-I pulled the new wig files here: /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/meth
 
 ################################################################################
 debug
