@@ -14,6 +14,7 @@ shortLabel Combined ENCODE Alns
 longLabel Combined ENCODE Alignments
 priority 1.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/encodeRnaSeq.bam
 
@@ -45,6 +46,7 @@ shortLabel ENCFF000IMA Alns
 longLabel ENCFF000IMA Alignments
 priority 2.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000IMA.bam
 
@@ -76,6 +78,7 @@ shortLabel ENCFF000IMC Alns
 longLabel ENCFF000IMC Alignments
 priority 3.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000IMC.bam
 
@@ -107,6 +110,7 @@ shortLabel ENCFF000INM Alns
 longLabel ENCFF000INM Alignments
 priority 4.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000INM.bam
 
@@ -138,6 +142,7 @@ shortLabel ENCFF000INN Alns
 longLabel ENCFF000INN Alignments
 priority 5.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000INN.bam
 
@@ -169,6 +174,7 @@ shortLabel ENCFF000IOD Alns
 longLabel ENCFF000IOD Alignments
 priority 6.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000IOD.bam
 
@@ -200,6 +206,7 @@ shortLabel ENCFF000IOP Alns
 longLabel ENCFF000IOP Alignments
 priority 7.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000IOP.bam
 
@@ -231,6 +238,7 @@ shortLabel ENCFF000IQQ Alns
 longLabel ENCFF000IQQ Alignments
 priority 8.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000IQQ.bam
 
@@ -262,6 +270,7 @@ shortLabel ENCFF000IQR Alns
 longLabel ENCFF000IQR Alignments
 priority 9.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF000IQR.bam
 
@@ -293,6 +302,7 @@ shortLabel ENCFF016TGP Alns
 longLabel ENCFF016TGP Alignments
 priority 10.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF016TGP.bam
 
@@ -324,6 +334,7 @@ shortLabel ENCFF034BHU Alns
 longLabel ENCFF034BHU Alignments
 priority 11.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF034BHU.bam
 
@@ -355,6 +366,7 @@ shortLabel ENCFF138HQU Alns
 longLabel ENCFF138HQU Alignments
 priority 12.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF138HQU.bam
 
@@ -386,6 +398,7 @@ shortLabel ENCFF456MMS Alns
 longLabel ENCFF456MMS Alignments
 priority 13.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF456MMS.bam
 
@@ -417,6 +430,7 @@ shortLabel ENCFF482SFO Alns
 longLabel ENCFF482SFO Alignments
 priority 14.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF482SFO.bam
 
@@ -448,6 +462,7 @@ shortLabel ENCFF850ZLY Alns
 longLabel ENCFF850ZLY Alignments
 priority 15.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF850ZLY.bam
 
@@ -479,6 +494,7 @@ shortLabel ENCFF960DLP Alns
 longLabel ENCFF960DLP Alignments
 priority 16.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF960DLP.bam
 
@@ -510,6 +526,7 @@ shortLabel ENCFF993CAL Alns
 longLabel ENCFF993CAL Alignments
 priority 17.0
 type bam
+maxItems 1000000
 visibility hide
 bigDataUrl encodeRnaSeq/bams/ENCFF993CAL.bam
 

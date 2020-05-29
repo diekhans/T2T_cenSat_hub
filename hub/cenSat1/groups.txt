@@ -13,6 +13,11 @@ label Annotation
 priority 3
 defaultIsClosed 0
 
+name genes
+label Genes
+priority 3.5
+defaultIsClosed 0
+
 name expression
 label Expression
 priority 4

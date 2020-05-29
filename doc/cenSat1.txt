@@ -249,6 +249,13 @@ Starting untrans gfServer for cenSat1 on port 17877
   rsync ../mapped/cenSat1.* $courtyard:/nanopore/markd/t2t-centromere/T2T_cenSat/hub/cenSat1/transMap/
 
 ################################################################################
+2020-05-29 KM's minimap segmentDups
+track name=‘hg38_SD’ description=‘hg38 segDup minimap2 phase1_2 ctRegions’ itemRgb=“On”
+/public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/hg38.SD.hicanu_phase1_2.ctRegions_5kbPlus.cenSatBrowser.bed
+cd hub/cenSat1/grch38
+bedSort /public/groups/nanopore/karen/chm13/cenSat_WG/phase1/browser/hg38.SD.hicanu_phase1_2.ctRegions_5kbPlus.cenSatBrowser.bed ~/tmp/x.bed
+bedToBigBed -type=bed9 ~/tmp/x.bed ../cenSat1.sizes cenSat1.alignSegDups.bigBed 
+################################################################################
 todo:
 
 ################################################################################
