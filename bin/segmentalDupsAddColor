@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+
+import argparse
+from pycbio.sys.color import Color
+from pycbio.hgdata.bed import Bed, BedReader
+
+
+def parseArgs():
+    usage = """turn a WU segmental dup track (genomicSuperDups.as) to a BED
+    with colors calculated the same way as the browser."""
+    parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('segDupBed',
+                        help="input genomicSuperDups BED file")
+    parser.add_argument('outBed',
+                        help="output BED file")
+    return parser.parse_args()
+
+numStdCols = 6
+
+# generated from SQL table defined by genomicSuperDups.as
+bedColMap = {
+    "chrom": 0,
+    "chromStart": 1,
+    "chromEnd": 2,
+    "name": 3,
+    "score": 4,
+    "strand": 5,
+    "otherChrom": 6,
+    "otherStart": 7,
+    "otherEnd": 8,
+    "otherSize": 9,
+    "uid": 10,
+    "posBasesHit": 11,
+    "testResult": 12,
+    "verdict": 13,
+    "chits": 14,
+    "ccov": 15,
+    "alignfile": 16,
+    "alignL": 17,
+    "indelN": 18,
+    "indelS": 19,
+    "alignB": 20,
+    "matchB": 21,
+    "mismatchB": 22,
+    "transitionsB": 23,
+    "transversionsB": 24,
+    "fracMatch": 25,
+    "fracMatchIndel": 26,
+    "jcK": 27,
+    "k2K": 28
+}
+
+def getXCol(bed, colName):
+    return bed.extraCols[bedColMap[colName] - numStdCols]
+
+def getFloatXCol(bed, colName):
+    return float(getXCol(bed, colName))
+
+maxShade = 9
+orange = Color.fromRgb8(230, 130, 0)
+yellow = Color.fromRgb8(210, 200, 0)
+red = Color.fromRgb8(255, 0, 0)
+
+def grayInRange(oldVal, oldMin, oldMax, newMax):
+    rng = oldMax - oldMin
+    newVal = ((oldVal - oldMin) * newMax + (rng >> 1)) // rng
+    if newVal <= 0:
+        newVal = 1
+    elif newVal > newMax:
+        newVal = newMax
+    return newVal
+
+# 10 shades of gray from white to black
+# Red is put at end to alert overflow.
+def makeGrayShades(maxShade):
+    shades = []
+    for i in range(maxShade + 1):
+        level = 255 - (255 * i // maxShade)
+        if level < 0:
+            level = 0
+        shades.append(Color.fromRgb8(level, level, level))
+    shades.append(red)
+    return shades
+shadesOfGray = makeGrayShades(maxShade)
+
+def calcColor(bed):
+    # from kent/src/hg/hgTracks/simpleTracks.c: genomicSuperDupsColor
+    if getXCol(bed, "verdict") == "BAD":
+        return red
+    fracMatch = getFloatXCol(bed, "fracMatch")
+    if fracMatch > 0.990:
+        return orange
+    if fracMatch > 0.980:
+        return yellow
+
+    grayLevel = grayInRange(int(fracMatch * 1000), 900, 1000, maxShade)
+    return shadesOfGray[grayLevel]
+
+def mkColorBed(bed):
+    color = calcColor(bed)
+    return Bed(bed.chrom, bed.start, bed.end, bed.name, bed.score, bed.strand,
+               bed.start, bed.end, color.toRgb8Str())
+
+def main(args):
+    with open(args.outBed, "w") as outFh:
+        for bed in BedReader(args.segDupBed, numStdCols=numStdCols):
+            mkColorBed(bed).write(outFh)
+
+main(parseArgs())

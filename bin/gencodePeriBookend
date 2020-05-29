@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+
+import argparse
+from pycbio.sys import fileOps
+from pycbio.hgdata.bigBedAccessor import BigBedAccessor
+
+
+def parseArgs():
+    usage = """gestimate pericentromere regions by extending out from the centromere
+    until hitting some gencode multiexon annotations"""
+    parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('centromereBigBed',
+                        help="centromere region")
+    parser.add_argument('transMapBigPsl',
+                        help="bigPsl for transmapped transcripts")
+    parser.add_argument('centromereExtendBed',
+                        help="has regions for 5'peri, 3'peri, and original centromere and merged")
+    return parser.parse_args()
+
+maxSearchRegion = 30000000
+searchIncrement = 100000
+
+def useBioType(bioType):
+    return ("pseudogene" not in bioType) or ("transcribed" in bioType) or ("translated" in bioType)
+
+def useTranscript(trans):
+    return (trans.blockCount > 1) and useBioType(trans.extraCols[35 - 12])
+
+def findFivePriPeri(chromSize, centromere, gencodeFh):
+    end = centromere.start - searchIncrement
+    while (end > 0) and (centromere.start - end <= maxSearchRegion):
+        start = max(end - searchIncrement, 0)
+        for trans in reversed(list(gencodeFh.overlapping(centromere.chrom, start, end))):
+            if useTranscript(trans):
+                return min(end + 2500, centromere.start)  # padding
+        end = start
+    return 0
+
+
+def findThreePriPeri(chromSize, centromere, gencodeFh):
+    start = centromere.end
+    while (start < chromSize) and (start - centromere.end <= maxSearchRegion):
+        end = max(start + searchIncrement, chromSize)
+        for trans in gencodeFh.overlapping(centromere.chrom, start, end):
+            if useTranscript(trans):
+                return max(trans.start - 2500, centromere.end)
+        start = end
+    return chromSize
+
+
+def proccesCentromere(chromSize, centromere, gencodeFh, outFh):
+    centromere.name = centromere.name.replace("ccenRegion", "cenRegion")  # HACK BAD DATA
+    nameSuffix = centromere.name.replace("cenRegion_","")
+    fivePriStart = findFivePriPeri(chromSize, centromere, gencodeFh)
+    threePriEnd = findThreePriPeri(chromSize, centromere, gencodeFh)
+    if fivePriStart < centromere.start:
+        fileOps.prRowv(outFh, centromere.chrom, fivePriStart, centromere.start,
+                       "peri5Region_" + nameSuffix)
+    fileOps.prRowv(outFh, centromere.chrom, centromere.start, centromere.end,
+                   centromere.name)
+    if threePriEnd > centromere.end:
+        fileOps.prRowv(outFh, centromere.chrom, centromere.end, threePriEnd,
+                       "peri3Region_" + nameSuffix)
+    fileOps.prRowv(outFh, centromere.chrom, fivePriStart, threePriEnd,
+                   "extendCenRegion_" + nameSuffix)
+
+
+def main(opts):
+    with BigBedAccessor(opts.transMapBigPsl, numStdCols=12) as gencodeFh:
+        with BigBedAccessor(opts.centromereBigBed, numStdCols=4) as centroFh:
+            with open(opts.centromereExtendBed, "w") as outFh:
+                for centromere in centroFh:
+                    proccesCentromere(centroFh.getChromSize(centromere.chrom), centromere, gencodeFh, outFh)
+
+
+main(parseArgs())
