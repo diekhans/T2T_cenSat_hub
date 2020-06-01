@@ -23,7 +23,7 @@ tmpPrefix=${TMPDIR}/callIntrons.${tmpName}
 tmpIntronsBed=${tmpPrefix}.introns.bed
 tmpJuncsBed=${tmpPrefix}.juncs.bed
 
-intronProspector -D dbg.out --min-confidence-score=1.0 -g ${genomeFa} -j ${tmpJuncsBed} -n ${tmpIntronsBed} ${bam}
+intronProspector --min-confidence-score=1.0 -g ${genomeFa} -j ${tmpJuncsBed} -n ${tmpIntronsBed} ${bam}
 
 intronsBigBedTmp=${intronsBigBed}.${tmpName}.tmp
 juncsBigBedTmp=${juncsBigBed}.${tmpName}.tmp

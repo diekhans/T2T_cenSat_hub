@@ -29,7 +29,6 @@ twoBitInfo ../../../hub/cenSat1/cenSat1.2bit tigs/cenSat1.sizes
 mkdir tigs/star
 nice STAR --runMode genomeGenerate --runThreadN 32 --genomeFastaFiles tigs/cenSat1.fa --genomeDir tigs/star --outFileNamePrefix tigs/star/out
 samtools faidx tigs/cenSat1.fa
-
 # each node has 32 cores and 256gb of memory, use 4 cores per job, 64gb mem
 ../../../../T2T_cenSat_hub/bin/genEncodeAlnJobs 4 64 data/metadata.tsv data tigs/star bams jobs.para
 
@@ -49,6 +48,9 @@ Longest finished job:           33036s     550.60m     9.18h    0.38d
 
 gensub2 <(find bams -name '*.bam') <(echo 1) introns.tmpl introns.jobs
 for f in bams/*.bam ; do (samtools index $f &); done
+
+*** BUGS:
+tig00001118:34,241,781-34,242,398 - non-canonical
 
 * 2020-04-17  proseq
  sync /public/groups/nanopore/karen/chm13/cenSat_WG/transcription/SKlein_PROSeq_forCollab_05Dec2019-145360224
@@ -70,6 +72,69 @@ gensub2 <(find bams -name '*.bam') <(echo 1) introns.tmpl introns.jobs
 
 for f in bams/*.bam ; do (samtools index $f &); done
 
+
+* 2020-05-30 genbank
+** mrnaBlatJob
+#!/bin/bash -e
+chr=$1
+fa=$2
+psl=$3
+pslTmp=${psl}.$(hostname).$$.tmp
+mkdir -p $(dirname $psl)
+blat -t=dna -q=rna -noHead -fine -minScore=20 -stepSize=5 \
+   -ooc=../../../../../hub/cenSat1/cenSat1.11.ooc \
+    ../../../../../hub/cenSat1/cenSat1.2bit:${chr} \
+    $fa $pslTmp
+mv $pslTmp $psl
+
+
+
+** estBlatJob
+#!/bin/bash -e
+chr=$1
+fa=$2
+psl=$3
+pslTmp=${psl}.$(hostname).$$.tmp
+mkdir -p $(dirname $psl)
+blat -t=dna -q=rna -noHead \
+   -ooc=../../../../../hub/cenSat1/cenSat1.11.ooc \
+    ../../../../../hub/cenSat1/cenSat1.2bit:${chr} \
+    $fa $pslTmp
+mv $pslTmp $psl
+
+** blat.gensub for mrna
+#LOOP
+../../mrnaBlatJob $(path1) $(path2) {check out exists rawpsl/$(root1).$(root2).psl}
+#ENDLOOP
+** blat.gensub for est
+#LOOP
+../../estBlatJob $(path1) $(path2) {check out exists rawpsl/$(root1).$(root2).psl}
+#ENDLOOP
+
+** steps
+cd hub/cenSat1
+blat cenSat1.2bit /dev/null /dev/null -tileSize=11 -makeOoc=cenSat1.11.ooc -repMatch=1024
+
+cd genefind/genbank/tmp
+
+cd mrna
+# "Homo sapiens" = 3218
+hgsql hgFixed -Ne 'select acc from gbCdnaInfo where organism=3218 and type="mRNA"' >mrna.acc
+getRna -inclVer hgFixed mrna.acc mrna.fa &
+faSplit about mrna.fa 200000 tmpfa/mrna.
+gensub2 ../../../../../hub/cenSat1/cenSat1.seqs <(find tmpfa -type f) blat.gensub mrna.jobs
+wc -l mrna.jobs  -> 5791212 mrna.jobs
+para shove -maxQueue=20000000 -maxPush=20000000  mrna.jobs -batch=b1 >&mrna.log
+
+cd est
+hgsql hgFixed -Ne 'select acc from gbCdnaInfo where organism=3218 and type="EST"' >est.acc
+getRna -inclVer hgFixed est.acc est.fa &
+faSplit about est.fa 400000 tmpfa/est.
+gensub2 ../../../../../hub/cenSat1/cenSat1.seqs <(find tmpfa -type f) blat.gensub est.jobs
+para shove -maxQueue=20000000 -maxPush=20000000  est.jobs -batch=b1 >&est.log
+# paused this to give mRNAs priority
+
+* TODO: used GM12878 ONT cDNA
 * some analysis notes
 ** from KM, regions with ESTs
   tig00000514:91520119-91789872
@@ -116,17 +181,20 @@ for f in bams/*.bam ; do (samtools index $f &); done
 
 search for "sliding window density" programs
 
-
 * 2020-05-24: Define faux pericentormere regions based regions without multi-exon gencode mappings
 cd gencodePeriBookend
-../../../../../T2T_cenSat_hub/bin/gencodePeriBookend ../../../../hub/cenSat1/centroRegions.bigBed ../../../../hub/cenSat1/transMap/cenSat1.ensembl.syn.transMapV1.bigPsl centroPlus.bed
-tawk '{print $0 >gensub("_.*$",".bed", "g", $4)}' centroPlus.bed 
+../../../../../T2T_cenSat_hub/bin/gencodePeriBookend ../../../../hub/cenSat1/centroRegions.bigBed ../../../../hub/cenSat1/transMap/cenSat1.ensembl.syn.transMapV1.bigPsl stdout| bedSort stdin centroPlus.bed
+
+bedToBigBed centroPlus.bed ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes centroPlus.bigBed
+
+
 
 # get junctions
 bigBedToBed ../encodeRnaSeq1/introns/encodeRnaSeq.juncs.bigBed /dev/stdout  |overlapSelect -inFmt=bed extendCenRegion.bed /dev/stdin juncs.extendCenRegion.bed
 bigBedToBed ../encodeRnaSeq1/introns/encodeRnaSeq.juncs.bigBed /dev/stdout  |overlapSelect -inFmt=bed cenRegion.bed /dev/stdin juncs.cenRegion.bed
 
 # for viz review only
+tawk '{print $0 >gensub("_.*$",".bed", "g", $4)}' centroPlus.bed 
 bedtools merge -s -d 2500 -i juncs.cenRegion.bed | tawk '{$4="cenRegion"NR; print}' > merge2500.cenRegion.bed
 bedtools merge -s -d 2500 -i juncs.extendCenRegion.bed | tawk '{$4="extendCenRegion"NR; print}' > merge2500.extendCenRegion.bed
 for b in merge*.bed ; do (echo "track name=$(basename $b .bed) visibility=pack" ; cat $b); done >~/public_html/tmp/t2t.ctrack
@@ -139,6 +207,23 @@ samtools view -b  -L ../gencodePeriBookend/centroPlus.bed ../encodeRnaSeq1/bams/
 # don't do multi-map corrections:
 (time nice ../../src/stringtie2-1.3.6/stringtie -u -o rnaseq-centroPlus.st.gtf rnaseq-centroPlus.bam )>&log&
 
-* cases
-** tig00001118:34,249,306-34,249,605
-- read with one valid intron
+* possible analysis tools
+** Blast2GO
+** https://omictools.com/reference-based-transcriptome-assembly-category
+** https://www.sciencedirect.com/science/article/pii/S0965174815000995
+** https://www.nature.com/articles/srep44383
+** https://www.biostars.org/p/369570/
+** https://link.springer.com/content/pdf/10.1007%2Fs40484-017-0109-2.pdf
+- review
+** http://www.eurekaselect.com/171526/article
+- review
+** https://www.hindawi.com/journals/cbj/2014/961823/
+hybrid approach
+** https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5722698/
+scallop
+* analysis
+** stringtie
+- -g 0 -u produces fewer exons without splice evidence
+- doesn't pay attention to paired end reads
+** tig00008423:147052-215406 20 blocks
+- tig00008423:158,276-167,726, big exon with no splice junctions
