@@ -288,7 +288,7 @@ track genbankRna
 shortLabel GenBank RNAs
 longLabel GenBank and RefSeq RNAs
 type bigPsl
-color 0,100,0
+color 0,0,220
 canPack on
 baseColorDefault diffCodons
 baseColorUseCds given
