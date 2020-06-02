@@ -257,6 +257,15 @@ group grch38
 ##
 # group expression
 ##
+track chm13IsoSeq
+shortLabel CHM13 IsoSeq
+longLabel  CHM13 IsoSeq
+type bam
+visibility hide
+bigDataUrl data/chm13_isoseq2hicanu_asm.bam
+priority 9
+group expression
+
 track NA12878cDNA
 shortLabel NA12878 cDNA
 longLabel NA12878 ONT cDNA
@@ -273,6 +282,26 @@ type bam
 visibility hide
 bigDataUrl data/NA12878-nvRNA.all.chm13_hicanu_hifi_20k.sorted.bam
 priority 20
+group expression
+
+track genbankRna
+shortLabel GenBank RNAs
+longLabel GenBank RNAs
+type bigPsl
+color 0,100,0
+canPack on
+baseColorDefault diffCodons
+baseColorUseCds given
+baseColorUseSequence lfExtra
+indelDoubleInsert on
+indelQueryInsert on
+showDiffBasesAllScales .
+showDiffBasesMaxZoom 10000.0
+showCdsAllScales .
+showCdsMaxZoom 10000.0
+visibility hide
+bigDataUrl data/mrna.tight.bigPsl
+priority 20.1
 group expression
 
 track transMapEnsemblAll
