@@ -286,7 +286,7 @@ group expression
 
 track genbankRna
 shortLabel GenBank RNAs
-longLabel GenBank RNAs
+longLabel GenBank and RefSeq RNAs
 type bigPsl
 color 0,100,0
 canPack on
