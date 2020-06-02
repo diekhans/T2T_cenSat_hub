@@ -128,3 +128,6 @@ dmypy.json
 
 .emacs.bak/
 .snakemake/
+
+output/
+bin/bedFindUniq

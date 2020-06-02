@@ -119,12 +119,25 @@ cd genefind/genbank/tmp
 
 cd mrna
 # "Homo sapiens" = 3218
+# ohh, includes refSeq too.  Should have filtered for patent sequences
+# FIXME: should have wacked patent sequences
 hgsql hgFixed -Ne 'select acc from gbCdnaInfo where organism=3218 and type="mRNA"' >mrna.acc
+hgsql hgFixed -Ne 'select concat(acc,".",version),name from gbCdnaInfo, cds where organism=3218 and type="mRNA" and cds.id=cds and cds != 0' |gzip -c >mrna.cds.gz &
 getRna -inclVer hgFixed mrna.acc mrna.fa &
 faSplit about mrna.fa 200000 tmpfa/mrna.
 gensub2 ../../../../../hub/cenSat1/cenSat1.seqs <(find tmpfa -type f) blat.gensub mrna.jobs
 wc -l mrna.jobs  -> 5791212 mrna.jobs
 para shove -maxQueue=20000000 -maxPush=20000000  mrna.jobs -batch=b1 >&mrna.log
+cd genbank
+find tmp/mrna/rawpsl -name '*.psl' | xargs cat | sort -k 10,10 | gzip -c > mrna.raw.psl.gz&
+gzip -c tmp/mrna/mrna.fa  >mrna.fa.gz&
+faPolyASizes mrna.fa.gz stdout | gzip -c >mrna.polya.gz
+(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.05 -minId=0.92 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -polyASizes=mrna.polya.gz -statsOut=mrna.loose.stats mrna.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >mrna.loose.psl.gz)>&loose.log&
+(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.95 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -polyASizes=mrna.polya.gz -statsOut=mrna.tight.stats mrna.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >mrna.tight.psl.gz)>&tight.log&
+
+pslToBigPsl -fa=mrna.fa.gz -cds=mrna.cds.gz mrna.tight.psl.gz stdout| bedSort stdin tmp.bigbedin
+bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes mrna.tight.bigPsl
+rm -f tmp.bigbedin
 
 cd est
 hgsql hgFixed -Ne 'select acc from gbCdnaInfo where organism=3218 and type="EST"' >est.acc
@@ -184,10 +197,11 @@ search for "sliding window density" programs
 * 2020-05-24: Define faux pericentormere regions based regions without multi-exon gencode mappings
 cd gencodePeriBookend
 ../../../../../T2T_cenSat_hub/bin/gencodePeriBookend ../../../../hub/cenSat1/centroRegions.bigBed ../../../../hub/cenSat1/transMap/cenSat1.ensembl.syn.transMapV1.bigPsl stdout| bedSort stdin centroPlus.bed
+# FIXME: the above lis created duplicated extendCenRegion_* records
 
 bedToBigBed centroPlus.bed ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes centroPlus.bigBed
 
-
+bedToHtmlDir -hub https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt cenSat1 <(sort -u extendCenRegion.bed) ~/public_html/t2t/genedir
 
 # get junctions
 bigBedToBed ../encodeRnaSeq1/introns/encodeRnaSeq.juncs.bigBed /dev/stdout  |overlapSelect -inFmt=bed extendCenRegion.bed /dev/stdin juncs.extendCenRegion.bed
