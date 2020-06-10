@@ -214,6 +214,7 @@ longLabel hicanu segdups
 type bigBed 9 +
 visibility hide
 bigDataUrl data/hicanuSegDupsBigBed.bigBed
+itemRgb on
 priority 14
 group annotation
 
