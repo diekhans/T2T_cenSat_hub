@@ -50,6 +50,8 @@ priority 12
 group assembly
 
 
+
+
 ##
 # group annotation
 ##
@@ -206,6 +208,18 @@ bigDataUrl horDecomposition.bigBed
 priority 22
 group annotation
 
+track hicanuSegDups
+shortLabel hicanu segdups
+longLabel hicanu segdups
+type bigBed 9 +
+visibility hide
+bigDataUrl data/hicanuSegDupsBigBed.bigBed
+priority 14
+group annotation
+
+##
+# group grch38
+##
 track grch38SynChains
 shortLabel GRCh38 Syntenic Chains
 longLabel  GRCh38 LASTZ Alignment Syntenic Chains
@@ -218,9 +232,6 @@ linkDataUrl grch38/cenSat1.hg38.over.bigLink
 priority 30
 group grch38
 
-##
-# group grch38
-##
 track grch38AllChains
 shortLabel GRCh38 all Chains
 longLabel  GRCh38 LASTZ Alignment Chains
@@ -301,7 +312,29 @@ showCdsAllScales .
 showCdsMaxZoom 10000.0
 visibility hide
 bigDataUrl data/mrna.tight.bigPsl
+searchIndex name
 priority 20.1
+group expression
+
+track genbankRnaRidged
+shortLabel GenBank RNAs (ridged)
+longLabel GenBank and RefSeq RNAs  (ridged filtering)
+type bigPsl
+color 0,100,220
+canPack on
+baseColorDefault diffCodons
+baseColorUseCds given
+baseColorUseSequence lfExtra
+indelDoubleInsert on
+indelQueryInsert on
+showDiffBasesAllScales .
+showDiffBasesMaxZoom 10000.0
+showCdsAllScales .
+showCdsMaxZoom 10000.0
+visibility hide
+bigDataUrl data/mrna.ridged.bigPsl
+searchIndex name
+priority 20.2
 group expression
 
 track transMapEnsemblAll

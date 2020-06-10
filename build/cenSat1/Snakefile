@@ -68,6 +68,7 @@ hsatThreshold10kCapOriBigBed = osp.join(asmHubDir, "hsatThreshold10kCapOri.bigBe
 asHorAnnBigBed = osp.join(asmHubDir, "asHorAnn.bigBed")
 asHorAnnOriBigBed = osp.join(asmHubDir, "asHorOriAnn.bigBed")
 horDecompositionBigBed = osp.join(asmHubDir, "horDecomposition.bigBed")
+hicanuSegDupsBigBed = osp.join(asmDataDir, "hicanuSegDupsBigBed.bigBed")
 
 allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               rmskBigBed, horArrayBigBed, horHmmBigBed, allGenomeSFBigBed,
@@ -75,7 +76,7 @@ allResults = [asmTwoBit, asmSizes, centroRegionsBigBed,
               monDecompositionBigBed, hsat10kCapBigBed, hsatThreshold10kCapBigBed,
               hsatThreshold10kCapOriBigBed,
               asHorAnnBigBed, asHorAnnOriBigBed,
-              horDecompositionBigBed] + hubOutFiles
+              horDecompositionBigBed, hicanuSegDupsBigBed] + hubOutFiles
 # BROKEN: rawMethCallsBigWig
 
 ##
@@ -115,7 +116,7 @@ def inputToLst(inSpec):
         raise Exception("Don't know how to make input into a list: {}: {}".format(type(inSpec), inSpec))
 
 
-def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
+def buildBigBed(inBeds, outBigBed, *, bedType="bed4", asFile=None, filterCmd=None):
     inBeds = inputToLst(inBeds)
     with tempfile.NamedTemporaryFile(delete=not bigKeepTmp) as bedFh:
         # discard non-cenSat contigs
@@ -127,7 +128,11 @@ def buildBigBed(inBeds, outBigBed, *, bedType="bed4", filterCmd=None):
         if filterCmd is not None:
             cmd.append(filterCmd)
         pipettor.run(cmd, stdout=bedFh.name)
-        pipettor.run(["bedToBigBed", "-type=" + bedType, "-tab", bedFh.name, asmSizes, outBigBed])
+        bbcmd = ["bedToBigBed", "-type=" + bedType, "-tab"]
+        if asFile is not None:
+            bbcmd += ["-as=" + asFile]
+        bbcmd += [bedFh.name, asmSizes, outBigBed]
+        pipettor.run(bbcmd)
 
 def buildBigWig(inWigs, outBigWig, *, clip=False):
     if isinstance(inWigs, str):
@@ -343,3 +348,9 @@ rule horDecomposition:
     output: horDecompositionBigBed
     run:
         buildBigBed({input}, horDecompositionBigBed, bedType="bed9")
+
+rule hicanuSegDups:
+    input:  osp.join(resultsDir, "cenSat1/chm13_hicanu_hifi_20k_no_bubbles_sedef_out/final.browser.bed.gz")
+    output: hicanuSegDupsBigBed
+    run:
+        buildBigBed({input}, hicanuSegDupsBigBed, bedType="bed9+", asFile="hicanuSegDups.as")
