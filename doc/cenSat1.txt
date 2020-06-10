@@ -272,6 +272,14 @@ liftOver  include-control_hg38.bed ../hg38aligns/hg38_cenSat1_lastz/axtChain/hg3
 
 #  not made into track for now, just using for analysis.
 ################################################################################
+
+2020-06-09: hicanu segdups
+from Robert Vollger  9:28 PM
+   I added the bed file to the globus share under
+   t2t_globus_share/team-segdups/Masker/chm13_hicanu_hifi_20k_no_bubbles_sedef_out/final.browser.bed
+
+################################################################################
+
 todo:
 
 ################################################################################
