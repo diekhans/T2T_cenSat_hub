@@ -1,3 +1,5 @@
+#+STARTUP: nologdone
+#+TODO: INPROGRESS | USE DROP
 
 * browser regions
 ** tig00000514:89642855-96498727	extendCenRegion_chr3_P1

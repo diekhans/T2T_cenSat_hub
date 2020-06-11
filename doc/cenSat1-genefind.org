@@ -133,10 +133,18 @@ find tmp/mrna/rawpsl -name '*.psl' | xargs cat | sort -k 10,10 | gzip -c > mrna.
 gzip -c tmp/mrna/mrna.fa  >mrna.fa.gz&
 faPolyASizes mrna.fa.gz stdout | gzip -c >mrna.polya.gz
 (pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.05 -minId=0.92 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -polyASizes=mrna.polya.gz -statsOut=mrna.loose.stats mrna.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >mrna.loose.psl.gz)>&loose.log&
-(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.95 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -polyASizes=mrna.polya.gz -statsOut=mrna.tight.stats mrna.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >mrna.tight.psl.gz)>&tight.log&
 
+# tight:
+(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.95 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -polyASizes=mrna.polya.gz -statsOut=mrna.tight.stats mrna.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >mrna.tight.psl.gz)>&tight.log
 pslToBigPsl -fa=mrna.fa.gz -cds=mrna.cds.gz mrna.tight.psl.gz stdout| bedSort stdin tmp.bigbedin
 bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes mrna.tight.bigPsl
+rm -f tmp.bigbedin
+
+# ridged 98% identity, 90% aligned, drop short
+(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.98 -minCover=0.90 -minQSize=100 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -polyASizes=mrna.polya.gz -statsOut=mrna.ridged.stats mrna.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >mrna.ridged.psl.gz)>&ridged.log&
+
+pslToBigPsl -fa=mrna.fa.gz -cds=mrna.cds.gz mrna.ridged.psl.gz stdout| bedSort stdin tmp.bigbedin
+bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes mrna.ridged.bigPsl
 rm -f tmp.bigbedin
 
 cd est
