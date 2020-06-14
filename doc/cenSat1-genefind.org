@@ -148,29 +148,29 @@ mv $pslTmp $psl
 
 ** steps
 cd tmp
-hgsql hg38 -Ne 'select * from wgEncodeGencodeCompV35 where exonCount > 1 and chrom not like  "%\_%"' | cut -f 2- >gencodeV32.mexon.gp
-getRnaPred hg38 gencodeV32.mexon.gp all gencodeV32.mexon.fa 
-faSplit about gencodeV32.mexon.fa 200000 tmpfa/gencode.
+hgsql hg38 -Ne 'select * from wgEncodeGencodeCompV35 where exonCount > 1 and chrom not like  "%\_%"' | cut -f 2- >gencodeV35.mexon.gp
+getRnaPred hg38 gencodeV35.mexon.gp all gencodeV35.mexon.fa 
+faSplit about gencodeV35.mexon.fa 200000 tmpfa/gencode.
 gensub2 ../../../../hub/cenSat1/cenSat1.seqs <(find tmpfa -type f) blat.gensub gencode.jobs
 wc -l gencode.jobs  -> 1723575 gencode.jobs
-para shove -maxQueue=20000000 -maxPush=20000000  gencodeV32.jobs -batch=b1 >&gencodeV32.log
-cd genbank
-find tmp/mrna/rawpsl -name '*.psl' | xargs cat | sort -k 10,10 | gzip -c > gencodeV32.raw.psl.gz&
-gzip -c tmp/mrna/gencodeV32.fa  >gencodeV32.fa.gz&
-(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.05 -minId=0.92 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV32.loose.stats gencodeV32.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV32.loose.psl.gz)>&loose.log&
+para shove -maxQueue=20000000 -maxPush=20000000  gencodeV35.jobs -batch=b1 >&gencodeV35.log
+cd gencodeAlign/
+find tmp/rawpsl -name '*.psl' | xargs cat | sort -k 10,10 | gzip -c > gencodeV35.raw.psl.gz&
+gzip -c tmp/gencodeV35.mexon.fa  >gencodeV35.fa.gz&
+genePredToFakePsl hg38 tmp/gencodeV35.mexon  gencodeV35.hg38.psl gencodeV35.cds
+
 
 # tight:
-(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.95 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV32.tight.stats gencodeV32.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV32.tight.psl.gz)>&tight.log
-pslToBigPsl -fa=gencodeV32.fa.gz -cds=gencodeV32.cds.gz gencodeV32.tight.psl.gz stdout| bedSort stdin tmp.bigbedin
-bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes gencodeV32.tight.bigPsl
+(pslCDnaFilter -localNearBest=0.005 -minId=0.95 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV35.tight.stats gencodeV35.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV35.tight.psl.gz)>&tight.log
+pslToBigPsl -fa=gencodeV35.fa.gz -cds=gencodeV35.cds.gz gencodeV35.tight.psl.gz stdout| bedSort stdin tmp.bigbedin
+bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes gencodeV35.tight.bigPsl
 rm -f tmp.bigbedin
 
 # ridged 98% identity, 90% aligned, drop short
-(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.98 -minCover=0.90 -minQSize=100 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV32.ridged.stats gencodeV32.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV32.ridged.psl.gz)>&ridged.log&
-
-pslToBigPsl -fa=gencodeV32.fa.gz -cds=gencodeV32.cds.gz gencodeV32.ridged.psl.gz stdout| bedSort stdin tmp.bigbedin
-bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes gencodeV32.ridged.bigPsl
+(pslCDnaFilter -localNearBest=0.005 -minId=0.98 -minCover=0.90 -minQSize=100 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV35.ridged.stats gencodeV35.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV35.ridged.psl.gz)>&ridged.log&
+pslToBigPsl -fa=gencodeV35.fa.gz -cds=gencodeV35.cds.gz gencodeV35.ridged.psl.gz stdout| bedSort stdin tmp.bigbedin
 rm -f tmp.bigbedin
+scp gencodeV35.ridged.bigPsl $courtyard:/nanopore/markd/t2t-centromere/T2T_cenSat/hub/cenSat1/data/
 
 * TODO: used GM12878 ONT cDNA
 * some analysis notes
@@ -274,11 +274,18 @@ hgsql hg38 -N < hg38-rna.sql | selectById 1 mrna-canon-juncs.ids 10 > mrna.tmp
 hgsql hg38 -Ne 'select * from ncbiRefSeqPsl'  | cut -f 2-|selectById 1 mrna-canon-juncs.ids 10 >ref.tmp&
 cat mrna.tmp ref.tmp >hg38-mrna.psl
 overlapSelect -nonOverlapping hg38.centromeres.bed hg38-mrna.psl hg38-mrna.noncent.psl 
-overlapSelect hg38.centromeres.bed hg38-mrna.psl hg38-mrna.cent.psl 
-  # gets nothing
-NR_146105.1 ???
-  ncbiRefSeqCurated Y
 
+# this gets nothing, drop, 
+#  overlapSelect hg38.centromeres.bed hg38-mrna.psl hg38-mrna.cent.psl 
+
+
+# build merged segdups for range
+bigBedToBed ../../../hub/cenSat1/data/hicanuSegDupsBigBed.bigBed stdout | cut -f 1-3 >tmp1.bed
+bigBedToBed ../../../hub/cenSat1/grch38/cenSat1.genomicSuperDups.bigBed stdout | cut -f 1-3 >tmp2.bed 
+sort -k 1,1 -k 2,2n tmp1.bed tmp2.bed >tmp3.bed
+overlapSelect ../gencodePeriBookend/extendCenRegion.bed tmp3.bed tmp4.bed
+bedtools merge -i tmp4.bed >segDups.bed
+rm tmp*.bed
 * 2020-06-13 centLociAnalysis - analysis of geneLociPick
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/hg38-mrna.noncent.psl hg38-mrna.noncent.qstats
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/mrna-canon-juncs.psl mrna-canon-juncs.qstats
@@ -308,4 +315,4 @@ scallop
 - read with one valid intron
 ** tig00005051:24,893,743-32,102,132
 - looks like many possible
->>>>>>> Stashed changes
+
