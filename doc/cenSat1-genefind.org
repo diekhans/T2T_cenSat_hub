@@ -268,7 +268,7 @@ bedToHtmlDir -title cenSat1-genes -hub https://courtyard.gi.ucsc.edu/~markd/T2T_
 
 # same, only include ones with NMs
 tawk '/NM_/' mrna-canon-juncs.psl > mrna-canon-juncs.nm.psl 
-overlapSelect loci.bed mrna-canon-juncs.nm.psl stdout |pslToBed stdin prot-loci.bed
+overlapSelect mrna-canon-juncs.nm.psl loci.bed prot-loci.bed
 bedToHtmlDir -title cenSat1-protein-genes -hub https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt cenSat1 prot-loci.bed ~/public_html/t2t/protdir
 
 
