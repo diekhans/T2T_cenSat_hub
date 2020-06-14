@@ -295,12 +295,11 @@ rm tmp*.bed
 https://hgwdev.gi.ucsc.edu/~markd/t2t/genedir/
 https://hgwdev.gi.ucsc.edu/~markd/t2t/protdir/
 
-
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/hg38-mrna.noncent.psl hg38-mrna.noncent.qstats
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/mrna-canon-juncs.psl mrna-canon-juncs.qstats
 
-overlapSelect -statsOutput ../geneLociPick/segDups.bed ../geneLociPick/loci.bed loci-segDups.overstats
-overlapSelect -statsOutput ../geneLociPick/segDups.bed ../geneLociPick/mrna-canon-juncs.psl mrna-segDups.overstats
+overlapSelect -statsOutputAll ../geneLociPick/segDups.bed ../geneLociPick/loci.bed loci-segDups.overstats
+overlapSelect -statsOutputAll ../geneLociPick/segDups.bed ../geneLociPick/mrna-canon-juncs.psl mrna-segDups.overstats
 
 * possible analysis tools
 ** Blast2GO
