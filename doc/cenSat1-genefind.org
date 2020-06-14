@@ -275,9 +275,6 @@ hgsql hg38 -Ne 'select * from ncbiRefSeqPsl'  | cut -f 2-|selectById 1 mrna-cano
 cat mrna.tmp ref.tmp >hg38-mrna.psl
 overlapSelect -nonOverlapping hg38.centromeres.bed hg38-mrna.psl hg38-mrna.noncent.psl 
 
-# this gets nothing, drop, 
-#  overlapSelect hg38.centromeres.bed hg38-mrna.psl hg38-mrna.cent.psl 
-
 
 # build merged segdups for range
 bigBedToBed ../../../hub/cenSat1/data/hicanuSegDupsBigBed.bigBed stdout | cut -f 1-3 >tmp1.bed
@@ -286,9 +283,12 @@ sort -k 1,1 -k 2,2n tmp1.bed tmp2.bed >tmp3.bed
 overlapSelect ../gencodePeriBookend/extendCenRegion.bed tmp3.bed tmp4.bed
 bedtools merge -i tmp4.bed >segDups.bed
 rm tmp*.bed
+
 * 2020-06-13 centLociAnalysis - analysis of geneLociPick
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/hg38-mrna.noncent.psl hg38-mrna.noncent.qstats
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/mrna-canon-juncs.psl mrna-canon-juncs.qstats
+overlapSelect -statsOutput ../geneLociPick/segDups.bed ../geneLociPick/loci.bed loci-segDups.overstats
+overlapSelect -statsOutput ../geneLociPick/segDups.bed ../geneLociPick/mrna-canon-juncs.psl mrna-segDups.overstats
 
 * possible analysis tools
 ** Blast2GO
