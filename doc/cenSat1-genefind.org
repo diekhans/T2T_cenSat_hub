@@ -303,3 +303,9 @@ scallop
 - doesn't pay attention to paired end reads
 ** tig00008423:147052-215406 20 blocks
 - tig00008423:158,276-167,726, big exon with no splice junctions
+* cases
+** tig00001118:34,249,306-34,249,605
+- read with one valid intron
+** tig00005051:24,893,743-32,102,132
+- looks like many possible
+>>>>>>> Stashed changes

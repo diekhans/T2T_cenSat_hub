@@ -1,61 +1,63 @@
 #+STARTUP: nologdone
-#+TODO: INPROGRESS | USE DROP
+#+TODO: GOOD SO-SO IGNORE
 
 * browser regions
-** tig00000514:89642855-96498727	extendCenRegion_chr3_P1
-** tig00000794:44463394-50899867	extendCenRegion_chr7_P1
-** tig00001033:130477567-132345994	extendCenRegion_chr5_P2
-** tig00001118:34059689-38138670	extendCenRegion_chr12_P1
-** tig00001215:0-16711240	extendCenRegion_chr1_P2
-** tig00001550:38422501-43300840	extendCenRegion_chr10_P1
-** tig00004789:45943858-49277811	extendCenRegion_chr5_P2
-** tig00005051:24893743-32102132	extendCenRegion_chr20_P1
-** tig00005234:31572139-32419290	extendCenRegion_chr6_P2
-** tig00005456:59319483-61191252	extendCenRegion_chr18_P2
-** tig00006085:2072795-4783647	extendCenRegion_chrX_P2
-** tig00006368:0-5611329	extendCenRegion_chr11_P2
-** tig00006402:34350830-35523496	extendCenRegion_chr11_P2
-** tig00006497:21350135-27916896	extendCenRegion_chr19_P1
-** tig00006563:0-2713762	extendCenRegion_chr4_P2
-** tig00006620:0-4916559	extendCenRegion_chr2_P1
-** tig00007394:0-3158498	extendCenRegion_chr17_P2
-** tig00007806:0-1197018	extendCenRegion_chr1_P2
-** tig00007848:0-2488657	extendCenRegion_chr18_P2
-** tig00008345:0-1457311	extendCenRegion_chr9_P2
+** GOOD tig00000514:89642855-96498727	extendCenRegion_chr3_P1
+several good genes
+** GOOD tig00000794:44463394-50899867	extendCenRegion_chr7_P1
+several good genes
+** IGNORE tig00001033:130477567-132345994	extendCenRegion_chr5_P2
+** SO-SO tig00001118:34059689-38138670	extendCenRegion_chr12_P1
+** GOOD tig00001215:0-16711240	extendCenRegion_chr1_P2
+** SO-SO tig00001550:38422501-43300840	extendCenRegion_chr10_P1
+** IGNORE tig00004789:45943858-49277811	extendCenRegion_chr5_P2
+** SO-SO tig00005051:24893743-32102132	extendCenRegion_chr20_P1
+** IGNORE tig00005234:31572139-32419290	extendCenRegion_chr6_P2
+** IGNORE tig00005456:59319483-61191252	extendCenRegion_chr18_P2
+** IGNORE tig00006085:2072795-4783647	extendCenRegion_chrX_P2
+** IGNORE tig00006368:0-5611329	extendCenRegion_chr11_P2
+** SO-SO tig00006402:34350830-35523496	extendCenRegion_chr11_P2
+** GOOD tig00006497:21350135-27916896	extendCenRegion_chr19_P1*
+** GOOD tig00006563:0-2713762	extendCenRegion_chr4_P2
+** GOOD tig00006620:0-4916559	extendCenRegion_chr2_P1
+** GOOD tig00007394:0-3158498	extendCenRegion_chr17_P2
+** SO-SO tig00007806:0-1197018	extendCenRegion_chr1_P2
+** SO-SO tig00007848:0-2488657	extendCenRegion_chr18_P2
+** SO-SO tig00008345:0-1457311	extendCenRegion_chr9_P2
 ** tig00008346:0-30686	extendCenRegion_chr9_P2
 ** tig00008423:0-2288780	extendCenRegion_chr9_P2
 ** tig00008798:0-1954381	extendCenRegion_chrX_P2
-** tig00008968:0-1167985	extendCenRegion_chr4_P2
-** tig00008999:0-986990	extendCenRegion_chr6_P2
-** tig00009013:0-467620	extendCenRegion_chr4_P2
-** tig00009029:0-647316	extendCenRegion_chr17_P2
-** tig00009070:0-307715	extendCenRegion_chr18_P2
-** tig00009072:0-264021	extendCenRegion_chr18_P2
-** tig00009121:0-177037	extendCenRegion_chr4_P2
-** tig00009121:0-177037	extendCenRegion_chr6_P2
-** tig00009141:0-189673	extendCenRegion_chr6_P2
-** tig00009144:0-142661	extendCenRegion_chr6_P2
-** tig00009148:0-174473	extendCenRegion_chr6_P2
-** tig00009195:0-84851	extendCenRegion_chr6_P2
-** tig00009208:0-88570	extendCenRegion_chr6_P2
-** tig00018062:0-947869	extendCenRegion_chr1_P2
-** tig00018071:31112436-34735922	extendCenRegion_chr8_P1
-** tig00018075:0-1787579	extendCenRegion_chr6_P2
-** tig00018082:0-5512285	extendCenRegion_chr9_P2
-** tig00018083:0-24554	extendCenRegion_chr9_P2
-** tig00018084:0-8696194	extendCenRegion_chr9_P2
-** tig00018085:0-49183	extendCenRegion_chr9_P2
-** tig00018086:0-22141	extendCenRegion_chr9_P2
-** tig00018087:0-42318	extendCenRegion_chr9_P2
-** tig00018088:0-64704	extendCenRegion_chr9_P2
-** tig00018089:0-28735	extendCenRegion_chr9_P2
-** tig00018090:0-27374	extendCenRegion_chr9_P2
-** tig00018095:10759128-11463215	extendCenRegion_chr17_P2
-** tig00018096:0-20613	extendCenRegion_chr17_P2
-** tig00018097:0-1925300	extendCenRegion_chr17_P2
-** tig00018101:14895311-18655839	extendCenRegion_chr16_P1
-** tig00018102:0-42464	extendCenRegion_chr16_P1
-** tig00018103:0-5286992	extendCenRegion_chr16_P1
-** tig00018104:0-34855	extendCenRegion_chr16_P1
-** tig00018105:0-3492317	extendCenRegion_chr16_P1
-** tig00018112:0-2460651	extendCenRegion_chr9_P2
+** IGNORE tig00008968:0-1167985	extendCenRegion_chr4_P2
+** IGNORE tig00008999:0-986990	extendCenRegion_chr6_P2
+** IGNORE tig00009013:0-467620	extendCenRegion_chr4_P2
+** IGNORE tig00009029:0-647316	extendCenRegion_chr17_P2
+** IGNORE tig00009070:0-307715	extendCenRegion_chr18_P2
+** IGNORE tig00009072:0-264021	extendCenRegion_chr18_P2
+** IGNORE tig00009121:0-177037	extendCenRegion_chr4_P2
+** IGNORE tig00009121:0-177037	extendCenRegion_chr6_P2
+** IGNORE tig00009141:0-189673	extendCenRegion_chr6_P2
+** IGNORE tig00009144:0-142661	extendCenRegion_chr6_P2
+** IGNORE tig00009148:0-174473	extendCenRegion_chr6_P2
+** IGNORE tig00009195:0-84851	extendCenRegion_chr6_P2
+** IGNORE tig00009208:0-88570	extendCenRegion_chr6_P2
+** GOOD tig00018062:0-947869	extendCenRegion_chr1_P2
+** SO-SO tig00018071:31112436-34735922	extendCenRegion_chr8_P1
+** GOOD tig00018075:0-1787579	extendCenRegion_chr6_P2
+** SO-SO tig00018082:0-5512285	extendCenRegion_chr9_P2
+** IGNORE tig00018083:0-24554	extendCenRegion_chr9_P2
+** SO-SO tig00018084:0-8696194	extendCenRegion_chr9_P2
+** IGNORE tig00018085:0-49183	extendCenRegion_chr9_P2
+** IGNORE tig00018086:0-22141	extendCenRegion_chr9_P2
+** IGNORE tig00018087:0-42318	extendCenRegion_chr9_P2
+** IGNORE tig00018088:0-64704	extendCenRegion_chr9_P2
+** IGNORE tig00018089:0-28735	extendCenRegion_chr9_P2
+** IGNORE tig00018090:0-27374	extendCenRegion_chr9_P2
+** GOOD tig00018095:10759128-11463215	extendCenRegion_chr17_P2
+** IGNORE tig00018096:0-20613	extendCenRegion_chr17_P2
+** IGNORE tig00018097:0-1925300	extendCenRegion_chr17_P2
+** IGNORE tig00018101:14895311-18655839	extendCenRegion_chr16_P1
+** IGNORE tig00018102:0-42464	extendCenRegion_chr16_P1
+** IGNORE tig00018103:0-5286992	extendCenRegion_chr16_P1
+** IGNORE tig00018104:0-34855	extendCenRegion_chr16_P1
+** IGNORE tig00018105:0-3492317	extendCenRegion_chr16_P1
+** GOOD tig00018112:0-2460651	extendCenRegion_chr9_P2
