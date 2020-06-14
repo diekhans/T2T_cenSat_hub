@@ -338,6 +338,28 @@ searchIndex name
 priority 20.2
 group expression
 
+track gencodeRidged
+shortLabel GENCODE BLAT (ridged)
+longLabel GENCODE RNA BLAT  (ridged filtering)
+type bigPsl
+color 0,220,100
+canPack on
+baseColorDefault diffCodons
+baseColorUseCds given
+baseColorUseSequence lfExtra
+indelDoubleInsert on
+indelQueryInsert on
+showDiffBasesAllScales .
+showDiffBasesMaxZoom 10000.0
+showCdsAllScales .
+showCdsMaxZoom 10000.0
+visibility hide
+bigDataUrl data/gencodeV35.ridged.bigPsl
+searchIndex name
+priority 20.2.
+group expression
+
+
 track transMapEnsemblAll
 shortLabel TransMap GENCODE (all)
 longLabel TransMap GENCODE Mappings (all chains)
