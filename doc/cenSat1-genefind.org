@@ -252,18 +252,25 @@ only use mRNAs in extended regions
 that overlap canonical introns
 
 cd geneLociPick
+# get multi-exon overlaping canonical slice sites
 overlapSelect ../gencodePeriBookend/extendCenRegion.bed ../genbank/mrna.ridged.psl.gz tmp/mrna.psl
 bigBedToBed ../encodeRnaSeq1/introns/encodeRnaSeq.juncs.bigBed stdout | tawk '$4 ~ /.*[ATGC]/'  >tmp/encodeRnaSeq.juncs.bed
-overlapSelect tmp/encodeRnaSeq.juncs.bed tmp/mrna.psl  mrna-canon-juncs.psl
+overlapSelect tmp/encodeRnaSeq.juncs.bed tmp/mrna.psl stdout | pslMultiExon - mrna-canon-juncs.psl
 
 # find putative genes for multi-exon alignments
-pslMultiExon mrna-canon-juncs.psl | pslToBed stdin stdout | bedToGenePred  stdin mrna-canon-juncs.gp
+pslToBed mrna-canon-juncs.psl stdout | bedToGenePred  stdin mrna-canon-juncs.gp
 clusterGenes  mrna-canon-juncs.clusters no mrna-canon-juncs.gp -clusterTxBed=mrna-canon-juncs.clusters.bed
 
 # generate names for clusters that are more useful in browser
 # make an awk to do this
 tawk -v regs=../../../hub/cenSat1/centroRegions.bed  -f regname.awk mrna-canon-juncs.clusters.bed > loci.bed
-bedToHtmlDir -hub https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt cenSat1 loci.bed ~/public_html/t2t/genedir
+bedToHtmlDir -title cenSat1-genes -hub https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt cenSat1 loci.bed ~/public_html/t2t/genedir
+
+# same, only include ones with NMs
+tawk '/NM_/' mrna-canon-juncs.psl > mrna-canon-juncs.nm.psl 
+overlapSelect loci.bed mrna-canon-juncs.nm.psl stdout |pslToBed stdin prot-loci.bed
+bedToHtmlDir -title cenSat1-protein-genes -hub https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt cenSat1 prot-loci.bed ~/public_html/t2t/protdir
+
 
 # get data for stats for these and hg38
 cut -f 10 mrna-canon-juncs.psl |sort -u >mrna-canon-juncs.ids
@@ -285,8 +292,13 @@ bedtools merge -i tmp4.bed >segDups.bed
 rm tmp*.bed
 
 * 2020-06-13 centLociAnalysis - analysis of geneLociPick
+https://hgwdev.gi.ucsc.edu/~markd/t2t/genedir/
+https://hgwdev.gi.ucsc.edu/~markd/t2t/protdir/
+
+
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/hg38-mrna.noncent.psl hg38-mrna.noncent.qstats
 pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/mrna-canon-juncs.psl mrna-canon-juncs.qstats
+
 overlapSelect -statsOutput ../geneLociPick/segDups.bed ../geneLociPick/loci.bed loci-segDups.overstats
 overlapSelect -statsOutput ../geneLociPick/segDups.bed ../geneLociPick/mrna-canon-juncs.psl mrna-segDups.overstats
 
