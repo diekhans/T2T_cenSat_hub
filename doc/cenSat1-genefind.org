@@ -86,31 +86,10 @@ blat -t=dna -q=rna -noHead -fine -minScore=20 -stepSize=5 \
     ../../../../../hub/cenSat1/cenSat1.2bit:${chr} \
     $fa $pslTmp
 mv $pslTmp $psl
-
-
-
-** estBlatJob
-#!/bin/bash -e
-chr=$1
-fa=$2
-psl=$3
-pslTmp=${psl}.$(hostname).$$.tmp
-mkdir -p $(dirname $psl)
-blat -t=dna -q=rna -noHead \
-   -ooc=../../../../../hub/cenSat1/cenSat1.11.ooc \
-    ../../../../../hub/cenSat1/cenSat1.2bit:${chr} \
-    $fa $pslTmp
-mv $pslTmp $psl
-
 ** blat.gensub for mrna
 #LOOP
 ../../mrnaBlatJob $(path1) $(path2) {check out exists rawpsl/$(root1).$(root2).psl}
 #ENDLOOP
-** blat.gensub for est
-#LOOP
-../../estBlatJob $(path1) $(path2) {check out exists rawpsl/$(root1).$(root2).psl}
-#ENDLOOP
-
 ** steps
 cd hub/cenSat1
 blat cenSat1.2bit /dev/null /dev/null -tileSize=11 -makeOoc=cenSat1.11.ooc -repMatch=1024
@@ -147,13 +126,51 @@ pslToBigPsl -fa=mrna.fa.gz -cds=mrna.cds.gz mrna.ridged.psl.gz stdout| bedSort s
 bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes mrna.ridged.bigPsl
 rm -f tmp.bigbedin
 
-cd est
-hgsql hgFixed -Ne 'select acc from gbCdnaInfo where organism=3218 and type="EST"' >est.acc
-getRna -inclVer hgFixed est.acc est.fa &
-faSplit about est.fa 400000 tmpfa/est.
-gensub2 ../../../../../hub/cenSat1/cenSat1.seqs <(find tmpfa -type f) blat.gensub est.jobs
-para shove -maxQueue=20000000 -maxPush=20000000  est.jobs -batch=b1 >&est.log
-# paused this to give mRNAs priority
+
+* 2020-06-13 gencodeAlign
+** blatjob
+#!/bin/bash -e
+chr=$1
+fa=$2
+psl=$3
+pslTmp=${psl}.$(hostname).$$.tmp
+mkdir -p $(dirname $psl)
+blat -t=dna -q=rna -noHead -fine -minScore=20 -stepSize=5 \
+   -ooc=../../../../hub/cenSat1/cenSat1.11.ooc \
+    ../../../../hub/cenSat1/cenSat1.2bit:${chr} \
+    $fa $pslTmp
+mv $pslTmp $psl
+
+** blat.gensub
+#LOOP
+../../blatjob $(path1) $(path2) {check out exists rawpsl/$(root1).$(root2).psl}
+#ENDLOOP
+
+** steps
+cd tmp
+hgsql hg38 -Ne 'select * from wgEncodeGencodeCompV35 where exonCount > 1 and chrom not like  "%\_%"' | cut -f 2- >gencodeV32.mexon.gp
+getRnaPred hg38 gencodeV32.mexon.gp all gencodeV32.mexon.fa 
+faSplit about gencodeV32.mexon.fa 200000 tmpfa/gencode.
+gensub2 ../../../../hub/cenSat1/cenSat1.seqs <(find tmpfa -type f) blat.gensub gencode.jobs
+wc -l gencode.jobs  -> 1723575 gencode.jobs
+para shove -maxQueue=20000000 -maxPush=20000000  gencodeV32.jobs -batch=b1 >&gencodeV32.log
+cd genbank
+find tmp/mrna/rawpsl -name '*.psl' | xargs cat | sort -k 10,10 | gzip -c > gencodeV32.raw.psl.gz&
+gzip -c tmp/mrna/gencodeV32.fa  >gencodeV32.fa.gz&
+(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.05 -minId=0.92 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV32.loose.stats gencodeV32.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV32.loose.psl.gz)>&loose.log&
+
+# tight:
+(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.95 -minCover=0.15 -minQSize=20 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV32.tight.stats gencodeV32.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV32.tight.psl.gz)>&tight.log
+pslToBigPsl -fa=gencodeV32.fa.gz -cds=gencodeV32.cds.gz gencodeV32.tight.psl.gz stdout| bedSort stdin tmp.bigbedin
+bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes gencodeV32.tight.bigPsl
+rm -f tmp.bigbedin
+
+# ridged 98% identity, 90% aligned, drop short
+(pslCDnaFilter -blackList=blacklist.txt -localNearBest=0.005 -minId=0.98 -minCover=0.90 -minQSize=100 -ignoreIntrons -repsAsMatch -ignoreNs -bestOverlap -statsOut=gencodeV32.ridged.stats gencodeV32.raw.psl.gz stdout | sort -k 14,14 -k16,16n -k17,17nr | gzip -c >gencodeV32.ridged.psl.gz)>&ridged.log&
+
+pslToBigPsl -fa=gencodeV32.fa.gz -cds=gencodeV32.cds.gz gencodeV32.ridged.psl.gz stdout| bedSort stdin tmp.bigbedin
+bedToBigBed -type=bed12+13 -tab -as=${HOME}/kent/src/hg/lib/bigPsl.as tmp.bigbedin ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes gencodeV32.ridged.bigPsl
+rm -f tmp.bigbedin
 
 * TODO: used GM12878 ONT cDNA
 * some analysis notes
@@ -228,6 +245,43 @@ samtools view -b  -L ../gencodePeriBookend/centroPlus.bed ../encodeRnaSeq1/bams/
 
 # don't do multi-map corrections:
 (time nice ../../src/stringtie2-1.3.6/stringtie -u -o rnaseq-centroPlus.st.gtf rnaseq-centroPlus.bam )>&log&
+
+
+* 2020-06-12 geneLociPick higher-confidence gene regions
+only use mRNAs in extended regions
+that overlap canonical introns
+
+cd geneLociPick
+overlapSelect ../gencodePeriBookend/extendCenRegion.bed ../genbank/mrna.ridged.psl.gz tmp/mrna.psl
+bigBedToBed ../encodeRnaSeq1/introns/encodeRnaSeq.juncs.bigBed stdout | tawk '$4 ~ /.*[ATGC]/'  >tmp/encodeRnaSeq.juncs.bed
+overlapSelect tmp/encodeRnaSeq.juncs.bed tmp/mrna.psl  mrna-canon-juncs.psl
+
+# find putative genes for multi-exon alignments
+pslMultiExon mrna-canon-juncs.psl | pslToBed stdin stdout | bedToGenePred  stdin mrna-canon-juncs.gp
+clusterGenes  mrna-canon-juncs.clusters no mrna-canon-juncs.gp -clusterTxBed=mrna-canon-juncs.clusters.bed
+
+# generate names for clusters that are more useful in browser
+# make an awk to do this
+tawk -v regs=../../../hub/cenSat1/centroRegions.bed  -f regname.awk mrna-canon-juncs.clusters.bed > loci.bed
+bedToHtmlDir -hub https://courtyard.gi.ucsc.edu/~markd/T2T_cenSat/hub/hub.txt cenSat1 loci.bed ~/public_html/t2t/genedir
+
+# get data for stats for these and hg38
+cut -f 10 mrna-canon-juncs.psl |sort -u >mrna-canon-juncs.ids
+faSomeRecords ../genbank/mrna.fa.gz mrna-canon-juncs.ids mrna-canon-juncs.fa
+faSize -detailed mrna-canon-juncs.fa >mrna-canon-juncs.sizes
+
+hgsql hg38 -N < hg38-rna.sql | selectById 1 mrna-canon-juncs.ids 10 > mrna.tmp 
+hgsql hg38 -Ne 'select * from ncbiRefSeqPsl'  | cut -f 2-|selectById 1 mrna-canon-juncs.ids 10 >ref.tmp&
+cat mrna.tmp ref.tmp >hg38-mrna.psl
+overlapSelect -nonOverlapping hg38.centromeres.bed hg38-mrna.psl hg38-mrna.noncent.psl 
+overlapSelect hg38.centromeres.bed hg38-mrna.psl hg38-mrna.cent.psl 
+  # gets nothing
+NR_146105.1 ???
+  ncbiRefSeqCurated Y
+
+* 2020-06-13 centLociAnalysis - analysis of geneLociPick
+pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/hg38-mrna.noncent.psl hg38-mrna.noncent.qstats
+pslStats -queryStats -queries=../geneLociPick/mrna-canon-juncs.sizes ../geneLociPick/mrna-canon-juncs.psl mrna-canon-juncs.qstats
 
 * possible analysis tools
 ** Blast2GO

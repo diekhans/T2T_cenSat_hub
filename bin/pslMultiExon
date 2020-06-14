@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+from pycbio.hgdata.psl import PslReader
+
+
+def parseArgs():
+    usage = """Select apparent multi-exon PSL (gaps >= 30)
+"""
+    parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('inPsl', nargs='?', default=sys.stdin,
+                        type=argparse.FileType('r'),
+                        help="input PSL file")
+    parser.add_argument('outPsl', nargs='?', default=sys.stdout,
+                        type=argparse.FileType('w'),
+                        help="output PSL file")
+    return parser.parse_args()
+
+def hasIntrons(psl):
+    prevBlk = psl.blocks[0]
+    for blk in psl.blocks[1:]:
+        if (blk.tStart - prevBlk.tEnd) >= 30:
+            return True
+        prevBlk = blk
+    return False
+
+
+def main(args):
+    for psl in PslReader(args.inPsl):
+        if hasIntrons(psl):
+            psl.write(args.outPsl)
+
+main(parseArgs())
