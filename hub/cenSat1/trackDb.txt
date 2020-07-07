@@ -265,6 +265,16 @@ bigDataUrl grch38/cenSat1.genomicSuperDups.bigBed
 priority 30.2
 group grch38
 
+track grch38SegmentalDupsAll
+shortLabel GRCh38 Mapped Seg Dups (All)
+longLabel  GRCh38 Mapped Segmental Dups (All)
+type bigBed 9
+itemRgb on
+visibility hide
+bigDataUrl grch38/cenSat1.genomicSuperDupsAll.bigBed 
+priority 30.2.1
+group grch38
+
 track grch38AlignedSegmentalDups 
 shortLabel GRCh38 Aligned CT Seg Dups 
 longLabel  GRCh38 Centromeric Regions Aligned Segmental Dups
