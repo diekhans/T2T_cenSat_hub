@@ -212,6 +212,17 @@ Starting untrans gfServer for cenSat1 on port 17877
    # on courtyard
    ln -f cenSat1.genomicSuperDups.bigBed ../../hub/cenSat1/grch38/
 
+################################################################################
+# 2020-07-07: map Segmental Dups with all chains
+   cd T2T_cenSat/cenSat1/hg38aligns/genomicSuperDupsAll
+   hgsql hg38 -Ne 'select * from genomicSuperDups' | cut -f 2- > tmp/hg38.genomicSuperDups.extra.bed
+   ../../../../T2T_cenSat_hub/bin/segmentalDupsAddColor tmp/hg38.genomicSuperDups.extra.bed tmp/hg38.genomicSuperDups.bed
+   liftOver -tab -bedPlus=9 -multiple -noSerial  tmp/hg38.genomicSuperDups.bed ../hg38_cenSat1_lastz/axtChain/hg38.cenSat1.all.chain.gz stdout tmp/cenSat1.genomicSuperDups.unmapped.bed   | bedSort stdin tmp/cenSat1.genomicSuperDupsAll.bed
+   bedToBigBed -tab -type=bed9 tmp/cenSat1.genomicSuperDups.bed ../../../hub/cenSat1/cenSat1.sizes cenSat1.genomicSuperDupsAll.bigBed
+   rsync cenSat1.genomicSuperDupsAll.bigBed $courtyard:compbio/nanopore/projs/t2t-centromere/T2T_cenSat/hg38aligns/genomicSuperDupsAll
+   # on courtyard
+   ln -f cenSat1.genomicSuperDups.bigBed ../../hub/cenSat1/grch38/
+
 #################################################################################
 2020-04-30 transMap
   export PATH=${HOME}/compbio/projs/transMap/transMap-dev/bin:${PATH}
