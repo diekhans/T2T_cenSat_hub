@@ -290,6 +290,15 @@ from Robert Vollger  9:28 PM
    t2t_globus_share/team-segdups/Masker/chm13_hicanu_hifi_20k_no_bubbles_sedef_out/final.browser.bed
 
 ################################################################################
+# 2020-06-16 generate combined segdup files
+../../../../T2T_cenSat/hub/cenSat1/data/hicanuSegDupsBigBed.bigBed
+../../../../T2T_cenSat/hub/cenSat1/grch38/cenSat1.alignSegDups.bigBed
+../../../../T2T_cenSat/hub/cenSat1/grch38/cenSat1.genomicSuperDups.bigBed
+
+for bb in $(cat bb.lst ); do bigBedToBed $bb stdout ; done | cut -f 1-9 | bedSort stdin combinedSegDups.bed
+bedToBigBed combinedSegDups.bed ../../../../T2T_cenSat/hub/cenSat1/cenSat1.sizes combinedSegDups.bigBed
+ln combinedSegDups.bigBed  ../../../../T2T_cenSat/hub/cenSat1/data/
+################################################################################
 
 todo:
 

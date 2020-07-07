@@ -218,6 +218,16 @@ itemRgb on
 priority 14
 group annotation
 
+track combinedSeqDups
+shortLabel combined segdups
+longLabel combined segdups
+type bigBed 9
+visibility hide
+bigDataUrl data/combinedSegDups.bigBed
+itemRgb on
+priority 14
+group annotation
+
 ##
 # group grch38
 ##
