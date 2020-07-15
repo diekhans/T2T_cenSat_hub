@@ -97,3 +97,16 @@ type bam
 visibility hide
 bigDataUrl proSeq/bams/CHM13-5B_S2_L004_R1_001.bam
 
+################################################################################
+track proSeq21Mers
+shortLabel ProSeq 21-mer
+longLabel ProSeq unique mapped via 21-mer 
+type bigWig 0.0 50.0
+visibility hide
+bigDataUrl  CHM13_21mer-uniq_BT-v0-FULL-phase1_INTERSECT_proseq_cutadapt-2_bt2-filtered_bt2-N0-k100-FULL-phase1.bigWig 
+viewLimitsMax 0:1
+maxHeightPixels 100:32:8
+priority 11.5
+group expression
+
+
